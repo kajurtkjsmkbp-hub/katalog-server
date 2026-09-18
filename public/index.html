@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocalDash Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="apple-touch-icon" href="/icon.svg">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; overflow-x: hidden; }
+        .app-bg {
+            position: fixed; inset: 0; z-index: -2;
+            background-size: cover; background-position: center;
+            background-attachment: fixed; transition: background 0.5s ease;
+        }
+        #particles-js {
+            position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.6;
+        }
+        body.light-mode { background-color: #f8fafc; color: #0f172a; }
+        body.light-mode .overlay { background: rgba(248, 250, 252, 0.85); }
+        body.light-mode .glass-card { background: rgba(255, 255, 255, 0.7); border-color: rgba(0,0,0,0.1); color: #0f172a; }
+        body.light-mode .glass-card h3 { color: #0f172a; }
+        body.light-mode .glass-card .bg-slate-800 { background: #e2e8f0; color: #334155; }
+        body.light-mode header h1 { color: #0f172a; }
+        body.light-mode .text-slate-200 { color: #1e293b; }
+        body.light-mode .text-slate-300 { color: #334155; }
+        body.light-mode .text-slate-400 { color: #475569; }
+        body.light-mode input.bg-slate-800 { background: #ffffff; border-color: #cbd5e1; color: #0f172a; }
+        body.light-mode .bg-slate-800 { background: #ffffff; }
+        body.light-mode .border-slate-700 { border-color: #cbd5e1; }
+        body.light-mode .analog-clock { background: rgba(255,255,255,0.7); box-shadow: 0 0 10px rgba(0,0,0,0.1); color: #334155; }
+        body.light-mode .hour-hand { background: #334155; }
+        body.light-mode .min-hand { background: #0f172a; }
+        
+        .overlay {
+            background: rgba(15, 23, 42, 0.85); /* Dark overlay */
+            min-height: 100vh;
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1); transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+        .glass-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5); border-color: rgba(56, 189, 248, 0.5); }
+        .status-dot {
+            width: 12px; height: 12px; border-radius: 50%; display: inline-block;
+            box-shadow: 0 0 8px currentColor;
+        }
+        .status-checking { color: #fbbf24; background: #fbbf24; animation: pulse 1.5s infinite; }
+        .status-online { color: #22c55e; background: #22c55e; }
+        .status-offline { color: #ef4444; background: #ef4444; }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        
+        .admin-only { display: none !important; }
+        body.is-admin .admin-only { display: flex !important; }
+        body.is-admin .guest-only { display: none !important; }
+        
+        .admin-card-controls { display: none !important; }
+        body.is-admin .group:hover .admin-card-controls { display: flex !important; }
+
+        .icon-option { padding: 8px; text-align: center; border-radius: 6px; cursor: pointer; transition: 0.2s; color: #94a3b8; }
+        .icon-option:hover { background: #334155; color: #f8fafc; }
+        .icon-option.selected { background: #0ea5e9; color: white; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #0f172a; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        
+        .sysinfo-bar { height: 6px; border-radius: 3px; background: #334155; overflow: hidden; margin-top: 4px; }
+        .sysinfo-fill { height: 100%; background: #0ea5e9; transition: width 1s ease; }
+        
+        .cat-collapse { transition: max-height 0.3s ease-out, opacity 0.3s ease-out; overflow: hidden; max-height: 2000px; opacity: 1; }
+        .cat-collapse.collapsed { max-height: 0; opacity: 0; }
+        .cat-chevron { transition: transform 0.3s ease; }
+        .cat-chevron.collapsed { transform: rotate(-90deg); }
+
+        /* Jam Analog */
+        .analog-clock {
+            width: 70px; height: 70px;
+            border: 2px solid rgba(56, 189, 248, 0.5);
+            border-radius: 50%; position: relative;
+            background: rgba(15, 23, 42, 0.4);
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.5), 0 0 10px rgba(56, 189, 248, 0.2);
+            color: #cbd5e1; font-size: 11px; font-weight: bold;
+        }
+        .num { position: absolute; }
+        .num3 { top: 50%; right: 4px; transform: translateY(-50%); }
+        .num6 { bottom: 2px; left: 50%; transform: translateX(-50%); }
+        .num9 { top: 50%; left: 4px; transform: translateY(-50%); }
+        .num12 { top: 2px; left: 50%; transform: translateX(-50%); }
+
+        .hand {
+            position: absolute; bottom: 50%; left: 50%;
+            transform-origin: bottom; border-radius: 4px;
+            transform: translateX(-50%) rotate(0deg);
+        }
+        .hour-hand { width: 3px; height: 18px; background: #cbd5e1; z-index: 1; }
+        .min-hand { width: 2px; height: 26px; background: #f8fafc; z-index: 2; }
+        .second-hand { width: 1px; height: 28px; background: #ef4444; z-index: 3; }
+        .center-dot {
+            position: absolute; top: 50%; left: 50%;
+            width: 4px; height: 4px; background: #38bdf8;
+            border-radius: 50%; transform: translate(-50%, -50%); z-index: 4;
+        }
+    </style>
+</head>
+<body class="">
+<div id="particles-js"></div>
+<div class="overlay p-4 md:p-8">
+    <div class="max-w-7xl mx-auto">
+        
+        <!-- Header -->
+        <header class="flex flex-col md:flex-row justify-between items-center mb-10 border-b border-slate-700 pb-6 gap-4">
+            <div class="flex items-center gap-6">
+                <!-- Analog Clock -->
+                <div class="analog-clock flex-shrink-0 hidden md:block">
+                    <span class="num num12">12</span>
+                    <span class="num num3">3</span>
+                    <span class="num num6">6</span>
+                    <span class="num num9">9</span>
+                    <div class="hand hour-hand" id="hour-hand"></div>
+                    <div class="hand min-hand" id="min-hand"></div>
+                    <div class="hand second-hand" id="second-hand"></div>
+                    <div class="center-dot"></div>
+                </div>
+
+                <div>
+                    <h1 class="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-600 flex items-center">
+                        <i class="fa-solid fa-server mr-3 text-sky-500"></i>LocalDash <span class="text-xs text-yellow-500 border border-yellow-500 px-2 py-1 rounded ml-3">PRO</span>
+                    </h1>
+                    <p id="greetingText" class="text-slate-400 mt-2 text-lg">Memuat...</p>
+                </div>
+                
+                <!-- SysInfo Widget -->
+                <div class="hidden md:flex gap-4 ml-6 border-l border-slate-700 pl-6 text-sm text-slate-300">
+                    <div class="w-24">
+                        <div class="flex justify-between"><span>CPU</span><span id="sys-cpu">0%</span></div>
+                        <div class="sysinfo-bar"><div id="sys-cpu-bar" class="sysinfo-fill" style="width: 0%"></div></div>
+                    </div>
+                    <div class="w-24">
+                        <div class="flex justify-between"><span>RAM</span><span id="sys-ram">0%</span></div>
+                        <div class="sysinfo-bar"><div id="sys-ram-bar" class="sysinfo-fill bg-green-500" style="width: 0%"></div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex gap-4 items-center">
+                <div class="relative">
+                    <input type="text" id="searchInput" placeholder="Cari layanan atau tekan Enter u/ Google..." class="bg-slate-800 text-white rounded-lg pl-10 pr-4 py-2 border border-slate-700 focus:outline-none focus:border-sky-500 w-72 transition-colors">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400"></i>
+                </div>
+                
+                <button onclick="toggleTheme()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg font-medium transition-colors items-center gap-2" title="Ganti Tema">
+                    <i class="fa-solid fa-moon" id="theme-icon"></i>
+                </button>
+
+                <!-- Admin Buttons -->
+                <button onclick="openAddForm()" class="admin-only bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-lg font-medium transition-colors items-center gap-2">
+                    <i class="fa-solid fa-plus"></i> Tambah
+                </button>
+                <button onclick="openModal('settingsModal')" class="admin-only bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg font-medium transition-colors items-center gap-2">
+                    <i class="fa-solid fa-gear"></i>
+                </button>
+                <button onclick="logout()" class="admin-only bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition-colors items-center gap-2" title="Keluar">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                </button>
+
+                <!-- Guest Button -->
+                <button onclick="openModal('loginModal')" class="guest-only flex bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg font-medium transition-colors items-center gap-2 border border-slate-600">
+                    <i class="fa-solid fa-lock"></i> Login Admin
+                </button>
+            </div>
+        </header>
+
+        <!-- Container untuk List Kategori -->
+        <main id="catalog-container"></main>
+
+        <!-- Footer -->
+        <footer class="mt-16 mb-8 text-center text-slate-400 border-t border-slate-700/50 pt-8 pb-4">
+            <p class="text-sm font-medium tracking-wide">
+                Katalog Layanan IT & Web<br>
+                <span class="text-xs mt-2 block opacity-75">
+                    Dibuat & Dikembangkan oleh <span class="text-sky-400 font-bold">Adiningtyas Yuli Purwanto, S.Kom</span>
+                </span>
+            </p>
+        </footer>
+    </div>
+</div>
+
+<!-- Modal Quick View -->
+<div id="quickViewModal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4 md:p-8">
+    <div class="bg-slate-800 rounded-xl w-full h-full max-w-6xl flex flex-col border border-slate-700 shadow-2xl relative overflow-hidden">
+        <div class="flex justify-between items-center bg-slate-900 p-4 border-b border-slate-700">
+            <h3 class="text-xl font-bold text-sky-400" id="quickViewTitle"><i class="fa-solid fa-eye mr-2"></i> Pratinjau</h3>
+            <div class="flex gap-2">
+                <a id="quickViewLink" href="#" target="_blank" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg transition-colors"><i class="fa-solid fa-external-link-alt"></i> Buka Penuh</a>
+                <button onclick="closeModal('quickViewModal')" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"><i class="fa-solid fa-times"></i> Tutup</button>
+            </div>
+        </div>
+        <div class="flex-grow bg-white">
+            <iframe id="quickViewFrame" src="" class="w-full h-full border-0"></iframe>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Login -->
+<div id="loginModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center">
+    <div class="bg-slate-800 rounded-xl p-8 w-full max-w-sm border border-slate-700 shadow-2xl text-center">
+        <i class="fa-solid fa-shield-halved text-5xl text-sky-500 mb-4"></i>
+        <h3 class="text-xl font-bold mb-6">Login Administrator</h3>
+        <form onsubmit="login(event)">
+            <input type="password" id="loginPassword" required placeholder="Masukkan Password (default: admin)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white mb-4 text-center focus:outline-none focus:border-sky-500">
+            <div class="flex gap-3">
+                <button type="button" onclick="closeModal('loginModal')" class="w-1/2 py-2 rounded-lg text-slate-300 bg-slate-700 hover:bg-slate-600">Batal</button>
+                <button type="submit" class="w-1/2 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg">Masuk</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Tambah/Edit -->
+<div id="addModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center">
+    <div class="bg-slate-800 rounded-xl p-8 w-full max-w-md border border-slate-700 shadow-2xl">
+        <h3 id="modalTitle" class="text-xl font-bold mb-6">Tambah Link Baru</h3>
+        <form id="addLinkForm" onsubmit="saveLink(event)">
+            <input type="hidden" id="formId">
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-slate-300 mb-1">Nama Layanan</label>
+                <input type="text" id="formName" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-white">
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-slate-300 mb-1">URL / IP Address</label>
+                <input type="url" id="formUrl" required placeholder="http://192.168..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-white">
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-slate-300 mb-1">Kategori</label>
+                <input type="text" id="formCategory" list="categoryList" required placeholder="Pilih / Ketik Kategori..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-white">
+                <datalist id="categoryList"></datalist>
+            </div>
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-slate-300 mb-2">Pilih Ikon Layanan</label>
+                <input type="hidden" id="formIcon" value="">
+                <div class="grid grid-cols-6 gap-2 max-h-32 overflow-y-auto p-2 bg-slate-900 border border-slate-700 rounded-lg custom-scrollbar" id="iconPickerGrid">
+                    <!-- Icons will be injected by JS -->
+                </div>
+            </div>
+            <div class="flex justify-end gap-3">
+                <button type="button" onclick="closeModal('addModal')" class="px-4 py-2 rounded-lg bg-slate-700 text-white hover:bg-slate-600">Batal</button>
+                <button type="submit" class="px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg">Simpan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Settings -->
+<div id="settingsModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center">
+    <div class="bg-slate-800 rounded-xl p-8 w-full max-w-md border border-slate-700 shadow-2xl">
+        <h3 class="text-xl font-bold mb-6"><i class="fa-solid fa-paint-roller text-sky-400 mr-2"></i> Personalisasi Tampilan</h3>
+        <form onsubmit="saveSettings(event)">
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-slate-300 mb-1">URL Gambar Background (Web)</label>
+                <input type="url" id="formBg" placeholder="https://source.unsplash..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-white">
+                <p class="text-xs text-slate-500 mt-1">Biarkan kosong untuk kembali ke default.</p>
+            </div>
+            
+            <div class="flex items-center my-4 before:flex-1 before:border-t before:border-slate-700 before:mr-3 after:flex-1 after:border-t after:border-slate-700 after:ml-3 text-slate-400 text-xs font-bold">
+                ATAU
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-slate-300 mb-1">Upload Gambar dari Komputer</label>
+                <input type="file" id="formBgFile" accept="image/*" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-sky-50 file:text-sky-700 hover:file:bg-sky-100">
+                <p class="text-xs text-slate-500 mt-1">Maksimal 5MB. Upload akan otomatis menimpa URL.</p>
+            </div>
+            
+            <hr class="border-slate-700 my-6">
+            <h4 class="font-bold text-white mb-4"><i class="fa-solid fa-database text-sky-500 mr-2"></i> Manajemen Data</h4>
+            <div class="flex flex-col gap-4 mb-6">
+                <button type="button" onclick="downloadBackup()" class="w-full py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg flex items-center justify-center gap-2 transition-colors">
+                    <i class="fa-solid fa-download"></i> Download Backup Data
+                </button>
+                <div class="relative">
+                    <input type="file" id="formRestoreFile" accept=".json" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="restoreBackup(this)">
+                    <button type="button" class="w-full py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg flex items-center justify-center gap-2 transition-colors">
+                        <i class="fa-solid fa-upload"></i> Restore dari File Backup
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3">
+                <button type="button" onclick="closeModal('settingsModal')" class="px-4 py-2 rounded-lg bg-slate-700 text-white hover:bg-slate-600">Tutup</button>
+                <button type="submit" class="px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg">Simpan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    let token = localStorage.getItem('localdash_token');
+    
+    const availableIcons = [
+        'fa-server', 'fa-database', 'fa-wifi', 'fa-network-wired', 'fa-hard-drive', 'fa-code', 
+        'fa-film', 'fa-music', 'fa-gamepad', 'fa-shield-halved', 'fa-folder', 'fa-cloud', 
+        'fa-lock', 'fa-house', 'fa-chart-line', 'fa-microchip', 'fa-camera', 'fa-video', 
+        'fa-tv', 'fa-globe', 'fa-robot', 'fa-terminal', 'fa-box', 'fa-plug', 'fa-power-off',
+        'fa-brands fa-docker', 'fa-brands fa-linux', 'fa-brands fa-windows', 'fa-brands fa-apple', 
+        'fa-brands fa-github', 'fa-brands fa-gitlab', 'fa-brands fa-wordpress', 'fa-brands fa-chrome',
+        'fa-brands fa-php', 'fa-brands fa-python', 'fa-brands fa-node-js'
+    ];
+
+    function renderIconPicker() {
+        const grid = document.getElementById('iconPickerGrid');
+        grid.innerHTML = '';
+        availableIcons.forEach(iconClass => {
+            const isSelected = document.getElementById('formIcon').value === iconClass;
+            const activeClass = isSelected ? 'selected' : '';
+            grid.innerHTML += `<div class="icon-option ${activeClass}" onclick="selectIcon('${iconClass}')">
+                <i class="${iconClass.includes('fa-brands') ? iconClass : 'fa-solid ' + iconClass} text-xl"></i>
+            </div>`;
+        });
+    }
+
+    function selectIcon(iconClass) {
+        document.getElementById('formIcon').value = iconClass;
+        renderIconPicker();
+    }
+
+    function checkAuthUI() {
+        if (token) {
+            document.body.classList.add('is-admin');
+        } else {
+            document.body.classList.remove('is-admin');
+        }
+    }
+    checkAuthUI();
+
+    // FUNGSI MODAL
+    function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+    function closeModal(id) { 
+        document.getElementById(id).classList.add('hidden'); 
+        if(id === 'quickViewModal') {
+            document.getElementById('quickViewFrame').src = '';
+        }
+    }
+
+    // API Helpers
+    async function apiFetch(endpoint, options = {}) {
+        if (!options.headers) options.headers = {};
+        options.headers['Content-Type'] = 'application/json';
+        if (token) options.headers['Authorization'] = token;
+        
+        const res = await fetch(endpoint, options);
+        if (res.status === 401) { logout(); alert("Sesi habis, silakan login ulang."); return null; }
+        return await res.json();
+    }
+
+    async function login(e) {
+        e.preventDefault();
+        const pwd = document.getElementById('loginPassword').value;
+        const res = await fetch('/api/login', {
+            method: 'POST', headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({password: pwd})
+        });
+        const data = await res.json();
+        if (data.success) {
+            token = data.token;
+            localStorage.setItem('localdash_token', token);
+            checkAuthUI();
+            closeModal('loginModal');
+            document.getElementById('loginPassword').value = '';
+            initDragAndDrop(); // Re-init drag n drop if admin
+        } else {
+            alert("Password Salah!");
+        }
+    }
+
+    function logout() {
+        token = null;
+        localStorage.removeItem('localdash_token');
+        checkAuthUI();
+    }
+
+    // --- FUNGSI SETTINGS ---
+    async function loadSettings() {
+        const savedTheme = localStorage.getItem('localdash_theme');
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-mode');
+            const icon = document.getElementById('theme-icon');
+            if (icon) icon.className = 'fa-solid fa-sun';
+        }
+        
+        const res = await fetch('/api/settings');
+        const data = await res.json();
+        if (data.background) {
+            document.body.style.backgroundImage = `url('${data.background}')`;
+            document.getElementById('formBg').value = data.background;
+        } else {
+            document.body.style.backgroundImage = 'none';
+        }
+    }
+
+    async function saveSettings(e) {
+        e.preventDefault();
+        
+        const bgFile = document.getElementById('formBgFile').files[0];
+        
+        if (bgFile) {
+            const formData = new FormData();
+            formData.append('image', bgFile);
+            
+            const res = await fetch('/api/upload-bg', {
+                method: 'POST',
+                headers: { 'Authorization': token },
+                body: formData
+            });
+            const data = await res.json();
+            if(!data.success) { alert("Gagal mengupload!"); return; }
+        } else {
+            const bg = document.getElementById('formBg').value;
+            await apiFetch('/api/settings', { method: 'POST', body: JSON.stringify({ background: bg }) });
+        }
+        
+        document.getElementById('formBgFile').value = ''; // Reset
+        loadSettings();
+        closeModal('settingsModal');
+    }
+
+    // Load Data
+    async function fetchLinks() {
+        const res = await fetch('/api/links');
+        const data = await res.json();
+        renderCatalog(data);
+    }
+
+    function renderCatalog(links) {
+        const container = document.getElementById('catalog-container');
+        container.innerHTML = '';
+        
+        const categories = {};
+        const uniqueCategories = new Set();
+
+        links.forEach(link => {
+            if(!categories[link.category]) categories[link.category] = [];
+            categories[link.category].push(link);
+            uniqueCategories.add(link.category);
+        });
+
+        // Update datalist
+        const categoryListHTML = document.getElementById('categoryList');
+        categoryListHTML.innerHTML = '';
+        uniqueCategories.forEach(cat => categoryListHTML.innerHTML += `<option value="${cat}">`);
+
+        for (const [category, items] of Object.entries(categories)) {
+            let catIcon = items[0]?.icon.split(' ')[0] || 'fa-solid'; 
+            let catIcon2 = items[0]?.icon.split(' ')[1] || 'fa-folder'; 
+            if(!catIcon.includes('fa-')) catIcon2 = items[0]?.icon;
+            
+            let safeCategoryId = category.replace(/\s+/g, '-').toLowerCase();
+            let sectionHTML = `
+            <div class="mb-10">
+                <h2 class="text-2xl font-semibold mb-6 flex items-center justify-between text-slate-200 cursor-pointer group" onclick="toggleCategory('${safeCategoryId}')">
+                    <span class="flex items-center gap-2"><i class="fa-solid ${catIcon2} text-slate-400"></i> ${category}</span>
+                    <i id="chevron-${safeCategoryId}" class="fa-solid fa-chevron-down text-sm text-slate-500 group-hover:text-white cat-chevron"></i>
+                </h2>
+                <div id="grid-${safeCategoryId}" class="cat-collapse sortable-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" data-category="${category}">
+            `;
+
+            items.forEach(item => {
+                let iconClass = item.icon;
+                if (!iconClass.includes('fa-brands') && !iconClass.includes('fa-solid')) {
+                    iconClass = `fa-solid ${iconClass.replace('fa-solid ', '')}`;
+                }
+                
+                sectionHTML += `
+                <div class="glass-card rounded-xl p-6 flex flex-col items-start group relative" data-id="${item.id}">
+                    
+                    <!-- Top Right Controls -->
+                    <div class="absolute top-4 right-4 z-20 flex items-center gap-1">
+                        <!-- Quick View Button (All Users) -->
+                        <button onclick="openQuickView('${item.name.replace(/'/g, "\\'")}', '${item.url}')" class="text-slate-400 hover:text-sky-400 bg-slate-900/60 hover:bg-slate-900 p-2 rounded transition-colors" title="Quick View (Pratinjau)">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+
+                        <!-- Admin Controls -->
+                        <div class="admin-card-controls gap-1 bg-slate-900/80 p-1 rounded items-center">
+                            <button onclick="editLink(${item.id}, '${item.name.replace(/'/g, "\\'")}', '${item.url}', '${item.category}', '${item.icon}')" class="text-slate-300 hover:text-blue-500 transition-colors p-1"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteLink(${item.id})" class="text-slate-300 hover:text-red-500 transition-colors p-1"><i class="fa-solid fa-trash"></i></button>
+                            <div class="cursor-move text-slate-400 hover:text-white p-1 drag-handle"><i class="fa-solid fa-arrows-up-down-left-right"></i></div>
+                        </div>
+                    </div>
+
+                    <a href="${item.url}" target="_blank" class="w-full h-full flex flex-col relative">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="bg-${item.color}-500/20 p-3 rounded-lg text-${item.color}-400 group-hover:bg-${item.color}-500 group-hover:text-white transition-colors">
+                                <i class="${iconClass} text-2xl"></i>
+                            </div>
+                            <!-- Status Dot -->
+                            <div class="flex items-center gap-2">
+                                <span class="status-text text-xs text-slate-500">Checking...</span>
+                                <div class="status-dot status-checking" id="status-${item.id}" title="Memeriksa status..."></div>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold mb-1">${item.name}</h3>
+                        <div class="bg-slate-800 px-3 py-1 mt-auto rounded text-xs font-mono text-slate-300 w-full truncate">
+                            ${item.url}
+                        </div>
+                    </a>
+                </div>
+                `;
+            });
+            sectionHTML += `</div></div>`;
+            container.innerHTML += sectionHTML;
+        }
+
+        // Jalankan Health Check dan init drag drop
+        links.forEach(link => {
+            const card = container.querySelector(`[data-id="${link.id}"]`);
+            if(card) fetchStatus(link.url, card);
+        });
+        if(token) initDragAndDrop();
+    }
+
+    // --- FUNGSI HEALTH CHECK ---
+    async function fetchStatus(url, card) {
+        const dot = card.querySelector('.status-dot');
+        const text = card.querySelector('.status-text');
+        try {
+            const res = await fetch(`/api/status?url=${encodeURIComponent(url)}`);
+            const data = await res.json();
+            if (data.status === 'online') {
+                dot.className = 'w-3 h-3 rounded-full status-dot bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)]';
+                if(text) text.innerText = `Online (${data.ms}ms)`;
+                dot.title = `Online (${data.ms}ms)`;
+            } else {
+                dot.className = 'w-3 h-3 rounded-full status-dot bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]';
+                if(text) text.innerText = 'Offline';
+                dot.title = 'Offline';
+            }
+        } catch(e) {
+            dot.className = 'w-3 h-3 rounded-full status-dot bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]';
+            if(text) text.innerText = 'Error';
+            dot.title = 'Error';
+        }
+    }
+
+    // Drag and Drop
+    function initDragAndDrop() {
+        document.querySelectorAll('.sortable-grid').forEach(grid => {
+            new Sortable(grid, {
+                animation: 150,
+                handle: '.drag-handle',
+                onEnd: async function () {
+                    // Kumpulkan semua id dari semua grid untuk disimpan ordernya
+                    let orderData = [];
+                    let index = 0;
+                    document.querySelectorAll('.glass-card').forEach(card => {
+                        orderData.push({ id: parseInt(card.dataset.id), order: index++ });
+                    });
+                    await apiFetch('/api/links/reorder', { method: 'PUT', body: JSON.stringify({ orderData }) });
+                }
+            });
+        });
+    }
+
+    // Aksi Form
+    function openAddForm() {
+        document.getElementById('addLinkForm').reset();
+        document.getElementById('formId').value = '';
+        document.getElementById('formIcon').value = '';
+        document.getElementById('modalTitle').innerText = 'Tambah Link Baru';
+        renderIconPicker();
+        openModal('addModal');
+    }
+
+    function editLink(id, name, url, category, icon) {
+        document.getElementById('modalTitle').innerText = 'Edit Link';
+        document.getElementById('formId').value = id;
+        document.getElementById('formName').value = name;
+        document.getElementById('formUrl').value = url;
+        document.getElementById('formCategory').value = category;
+        document.getElementById('formIcon').value = icon;
+        renderIconPicker();
+        openModal('addModal');
+    }
+
+    async function saveLink(e) {
+        e.preventDefault();
+        const id = document.getElementById('formId').value;
+        const payload = {
+            name: document.getElementById('formName').value,
+            url: document.getElementById('formUrl').value,
+            category: document.getElementById('formCategory').value,
+            customIcon: document.getElementById('formIcon').value
+        };
+        const endpoint = id ? `/api/links/${id}` : '/api/links';
+        const method = id ? 'PUT' : 'POST';
+        
+        await apiFetch(endpoint, { method, body: JSON.stringify(payload) });
+        closeModal('addModal');
+        fetchLinks();
+    }
+
+    async function deleteLink(id) {
+        if(confirm("Yakin ingin menghapus?")) {
+            await apiFetch(`/api/links/${id}`, { method: 'DELETE' });
+            fetchLinks();
+        }
+    }
+
+    // Fitur Cari & Web Search
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+        const term = e.target.value.toLowerCase();
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.style.display = card.innerText.toLowerCase().includes(term) ? 'flex' : 'none';
+        });
+    });
+
+    document.getElementById('searchInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            const term = e.target.value.trim();
+            if (!term) return;
+            const visibleCards = Array.from(document.querySelectorAll('.glass-card')).filter(c => c.style.display !== 'none');
+            // Jika tidak ada hasil lokal, atau khusus memanggil google dengan awalan "g "
+            if (visibleCards.length === 0 || term.toLowerCase().startsWith('g ')) {
+                const query = term.toLowerCase().startsWith('g ') ? term.substring(2) : term;
+                window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
+            }
+        }
+    });
+
+    // Theme Toggle
+    function toggleTheme() {
+        document.body.classList.toggle('light-mode');
+        const isLight = document.body.classList.contains('light-mode');
+        document.getElementById('theme-icon').className = isLight ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        localStorage.setItem('localdash_theme', isLight ? 'light' : 'dark');
+    }
+
+    // --- FITUR PRO: SysInfo, Clock, Collapse, Backup/Restore ---
+    
+    function toggleCategory(catId) {
+        document.getElementById(`grid-${catId}`).classList.toggle('collapsed');
+        document.getElementById(`chevron-${catId}`).classList.toggle('collapsed');
+    }
+
+
+
+    async function fetchSysInfo() {
+        try {
+            const res = await fetch('/api/sysinfo');
+            const data = await res.json();
+            document.getElementById('sys-cpu').innerText = `${data.cpu}%`;
+            document.getElementById('sys-cpu-bar').style.width = `${data.cpu}%`;
+            document.getElementById('sys-ram').innerText = `${data.ram}%`;
+            document.getElementById('sys-ram-bar').style.width = `${data.ram}%`;
+        } catch(e) {}
+    }
+
+    function updateGreeting() {
+        const now = new Date();
+        const hour = now.getHours();
+        let greet = 'Selamat Malam';
+        if (hour >= 5 && hour < 12) greet = 'Selamat Pagi';
+        else if (hour >= 12 && hour < 15) greet = 'Selamat Siang';
+        else if (hour >= 15 && hour < 18) greet = 'Selamat Sore';
+        
+        document.getElementById('greetingText').innerHTML = `${greet}, Sugeng Rawuh!`;
+
+        // Update Jam Analog
+        const seconds = now.getSeconds();
+        const mins = now.getMinutes();
+        const hours = now.getHours();
+
+        const secondsDegrees = ((seconds / 60) * 360);
+        const minsDegrees = ((mins / 60) * 360) + ((seconds/60)*6);
+        const hoursDegrees = ((hours / 12) * 360) + ((mins/60)*30);
+
+        document.getElementById('second-hand').style.transform = `translateX(-50%) rotate(${secondsDegrees}deg)`;
+        document.getElementById('min-hand').style.transform = `translateX(-50%) rotate(${minsDegrees}deg)`;
+        document.getElementById('hour-hand').style.transform = `translateX(-50%) rotate(${hoursDegrees}deg)`;
+    }
+
+    function downloadBackup() {
+        if(!token) return alert('Silakan login dulu!');
+        window.location.href = '/api/backup?token=' + token; // Simple bypass for download
+        // Since we use headers for auth, downloading via window.location is tricky if we require headers.
+        // Let's do it via fetch and blob
+        fetch('/api/backup', { headers: { 'Authorization': token } })
+            .then(res => res.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'localdash-backup.json';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            });
+    }
+
+    async function restoreBackup(input) {
+        if(!input.files[0]) return;
+        if(!confirm("PERINGATAN: Ini akan menimpa semua data Anda! Lanjutkan?")) {
+            input.value = ''; return;
+        }
+        
+        const formData = new FormData();
+        formData.append('backupFile', input.files[0]);
+        
+        const res = await fetch('/api/restore', {
+            method: 'POST',
+            headers: { 'Authorization': token },
+            body: formData
+        });
+        
+        const data = await res.json();
+        if(data.success) {
+            alert("Restore Berhasil! Halaman akan dimuat ulang.");
+            window.location.reload();
+        } else {
+            alert("Gagal melakukan restore.");
+        }
+    }
+
+    setInterval(fetchSysInfo, 5000);
+    setInterval(updateGreeting, 1000);
+    updateGreeting();
+    fetchSysInfo();
+
+    // Inisialisasi
+    loadSettings();
+    fetchLinks();
+
+    // Fitur Quick View
+    function openQuickView(title, url) {
+        document.getElementById('quickViewTitle').innerHTML = `<i class="fa-solid fa-eye mr-2"></i> ${title}`;
+        document.getElementById('quickViewLink').href = url;
+        document.getElementById('quickViewFrame').src = url;
+        openModal('quickViewModal');
+    }
+
+    // Inisialisasi Service Worker untuk PWA
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js').catch(err => {
+                console.log('SW Registration failed: ', err);
+            });
+        });
+    }
+
+    // Inisialisasi Particles.js
+    particlesJS("particles-js", {
+        "particles": {
+            "number": { "value": 40, "density": { "enable": true, "value_area": 800 } },
+            "color": { "value": "#0ea5e9" },
+            "shape": { "type": "circle" },
+            "opacity": { "value": 0.5, "random": false },
+            "size": { "value": 3, "random": true },
+            "line_linked": { "enable": true, "distance": 150, "color": "#0ea5e9", "opacity": 0.2, "width": 1 },
+            "move": { "enable": true, "speed": 1, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
+        },
+        "interactivity": {
+            "detect_on": "canvas",
+            "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" }, "resize": true },
+            "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 0.5 } }, "push": { "particles_nb": 4 } }
+        },
+        "retina_detect": true
+    });
+</script>
+</body>
+</html>

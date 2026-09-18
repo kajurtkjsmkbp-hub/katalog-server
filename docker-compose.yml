@@ -1,0 +1,10 @@
+version: '3'
+services:
+  katalog-lokal:
+    image: nginx:alpine
+    container_name: localdash
+    ports:
+      - "80:80"
+    volumes:
+      - ./index.html:/usr/share/nginx/html/index.html:ro
+    restart: unless-stopped
