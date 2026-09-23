@@ -565,11 +565,21 @@
             container.innerHTML += sectionHTML;
         }
 
-        // Jalankan Health Check dan init drag drop
+        // Jalankan Health Check
         links.forEach(link => {
             const card = container.querySelector(`[data-id="${link.id}"]`);
             if(card) fetchStatus(link.url, card);
         });
+
+        // Set Realtime Auto-Update Status (Setiap 10 Detik)
+        if (window.statusInterval) clearInterval(window.statusInterval);
+        window.statusInterval = setInterval(() => {
+            links.forEach(link => {
+                const card = container.querySelector(`[data-id="${link.id}"]`);
+                if(card) fetchStatus(link.url, card);
+            });
+        }, 10000); // 10000ms = 10 detik
+
         if(token) initDragAndDrop();
     }
 
