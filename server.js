@@ -18,8 +18,17 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // --- KONFIGURASI KEAMANAN ---
-const ADMIN_PASSWORD = "admin"; // Password default
 const ADMIN_TOKEN = "token-rahasia-localdash-123";
+
+function getAdminPassword() {
+    if (fs.existsSync(SETTINGS_FILE)) {
+        try {
+            const settings = JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8'));
+            if (settings.password) return settings.password;
+        } catch (e) {}
+    }
+    return "admin"; // Password default
+}
 
 app.use(cors());
 app.use(express.json());
@@ -30,7 +39,7 @@ if (!fs.existsSync(DATA_FILE)) {
     fs.writeFileSync(DATA_FILE, JSON.stringify([], null, 2));
 }
 if (!fs.existsSync(SETTINGS_FILE)) {
-    fs.writeFileSync(SETTINGS_FILE, JSON.stringify({ background: '', theme: 'dark' }, null, 2));
+    fs.writeFileSync(SETTINGS_FILE, JSON.stringify({ background: '', theme: 'dark', password: 'admin' }, null, 2));
 }
 
 // Middleware Autentikasi
@@ -46,10 +55,25 @@ function requireAuth(req, res, next) {
 // --- ENDPOINT AUTENTIKASI ---
 app.post('/api/login', (req, res) => {
     const { password } = req.body;
-    if (password === ADMIN_PASSWORD) {
+    if (password === getAdminPassword()) {
         res.json({ success: true, token: ADMIN_TOKEN });
     } else {
         res.status(401).json({ success: false, message: 'Password salah' });
+    }
+});
+
+app.post('/api/change-password', (req, res) => {
+    const { oldPassword, newPassword } = req.body;
+    if (oldPassword === getAdminPassword()) {
+        let settings = { background: '', theme: 'dark' };
+        if (fs.existsSync(SETTINGS_FILE)) {
+            settings = JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8'));
+        }
+        settings.password = newPassword;
+        fs.writeFileSync(SETTINGS_FILE, JSON.stringify(settings, null, 2));
+        res.json({ success: true });
+    } else {
+        res.status(401).json({ success: false, message: 'Password lama salah' });
     }
 });
 

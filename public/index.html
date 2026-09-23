@@ -207,16 +207,29 @@
     </div>
 </div>
 
-<!-- Modal Login -->
+<!-- Modal Login & Ubah Password -->
 <div id="loginModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center">
-    <div class="bg-slate-800 rounded-xl p-8 w-full max-w-sm border border-slate-700 shadow-2xl text-center">
+    <div class="bg-slate-800 rounded-xl p-8 w-full max-w-sm border border-slate-700 shadow-2xl text-center relative overflow-hidden">
         <i class="fa-solid fa-shield-halved text-5xl text-sky-500 mb-4"></i>
-        <h3 class="text-xl font-bold mb-6">Login Administrator</h3>
-        <form onsubmit="login(event)">
+        <h3 class="text-xl font-bold mb-6" id="loginModalTitle">Login Administrator</h3>
+        
+        <!-- Form Login -->
+        <form id="loginForm" onsubmit="login(event)">
             <input type="password" id="loginPassword" required placeholder="Masukkan Password (default: admin)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white mb-4 text-center focus:outline-none focus:border-sky-500">
             <div class="flex gap-3">
                 <button type="button" onclick="closeModal('loginModal')" class="w-1/2 py-2 rounded-lg text-slate-300 bg-slate-700 hover:bg-slate-600">Batal</button>
                 <button type="submit" class="w-1/2 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg">Masuk</button>
+            </div>
+            <button type="button" onclick="toggleChangePassword()" class="mt-4 text-sm text-sky-400 hover:text-sky-300 underline"><i class="fa-solid fa-key mr-1"></i> Ubah Password</button>
+        </form>
+
+        <!-- Form Ubah Password -->
+        <form id="changePasswordForm" onsubmit="changePassword(event)" class="hidden">
+            <input type="password" id="oldPassword" required placeholder="Password Lama" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white mb-3 text-center focus:outline-none focus:border-sky-500">
+            <input type="password" id="newPassword" required placeholder="Password Baru" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white mb-4 text-center focus:outline-none focus:border-sky-500">
+            <div class="flex gap-3">
+                <button type="button" onclick="toggleChangePassword()" class="w-1/2 py-2 rounded-lg text-slate-300 bg-slate-700 hover:bg-slate-600">Batal</button>
+                <button type="submit" class="w-1/2 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg text-black font-bold">Ubah</button>
             </div>
         </form>
     </div>
@@ -382,6 +395,42 @@
         token = null;
         localStorage.removeItem('localdash_token');
         checkAuthUI();
+    }
+
+    function toggleChangePassword() {
+        const loginForm = document.getElementById('loginForm');
+        const changePasswordForm = document.getElementById('changePasswordForm');
+        const modalTitle = document.getElementById('loginModalTitle');
+        if (loginForm.classList.contains('hidden')) {
+            loginForm.classList.remove('hidden');
+            changePasswordForm.classList.add('hidden');
+            modalTitle.innerText = "Login Administrator";
+        } else {
+            loginForm.classList.add('hidden');
+            changePasswordForm.classList.remove('hidden');
+            modalTitle.innerText = "Ubah Password Admin";
+        }
+    }
+
+    async function changePassword(e) {
+        e.preventDefault();
+        const oldP = document.getElementById('oldPassword').value;
+        const newP = document.getElementById('newPassword').value;
+        const res = await fetch('/api/change-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ oldPassword: oldP, newPassword: newP })
+        });
+        const data = await res.json();
+        if (data.success) {
+            alert('Password berhasil diubah!');
+            toggleChangePassword();
+            document.getElementById('oldPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            closeModal('loginModal');
+        } else {
+            alert(data.message || 'Password lama salah!');
+        }
     }
 
     // --- FUNGSI SETTINGS ---
