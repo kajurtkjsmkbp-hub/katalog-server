@@ -156,6 +156,9 @@ app.delete('/api/links/:id', requireAuth, (req, res) => {
 });
 
 // --- ENDPOINT HEALTH CHECK ---
+const http = require('http');
+const https = require('https');
+
 function checkHostPort(host, port, timeout = 2000) {
     return new Promise((resolve) => {
         const socket = new net.Socket();
@@ -175,16 +178,43 @@ function checkHostPort(host, port, timeout = 2000) {
     });
 }
 
+function checkHttp(urlString, timeout = 3000) {
+    return new Promise((resolve) => {
+        const startTime = Date.now();
+        const client = urlString.startsWith('https') ? https : http;
+        
+        const req = client.get(urlString, {
+            timeout: timeout,
+            rejectUnauthorized: false
+        }, (res) => {
+            // Treat 200-499 as online, 500+ as offline (especially 502/521/522 for reverse proxies)
+            if (res.statusCode >= 200 && res.statusCode < 500) {
+                resolve({ status: 'online', ms: Date.now() - startTime });
+            } else {
+                resolve({ status: 'offline', ms: 0 });
+            }
+            res.resume();
+        });
+
+        req.on('timeout', () => { req.destroy(); resolve({ status: 'offline', ms: 0 }); });
+        req.on('error', () => { resolve({ status: 'offline', ms: 0 }); });
+    });
+}
+
 app.get('/api/status', async (req, res) => {
     const urlString = req.query.url;
     if (!urlString) return res.json({ status: 'offline', ms: 0 });
     try {
-        const cleanUrl = urlString.replace(/^https?:\/\//, '').split('/')[0];
-        let [host, portStr] = cleanUrl.split(':');
-        let port = portStr ? parseInt(portStr) : (urlString.startsWith('https') ? 443 : 80);
-        
-        const result = await checkHostPort(host, port);
-        res.json(result);
+        if (urlString.startsWith('http://') || urlString.startsWith('https://')) {
+            const result = await checkHttp(urlString);
+            res.json(result);
+        } else {
+            const cleanUrl = urlString.replace(/^https?:\/\//, '').split('/')[0];
+            let [host, portStr] = cleanUrl.split(':');
+            let port = portStr ? parseInt(portStr) : 80;
+            const result = await checkHostPort(host, port);
+            res.json(result);
+        }
     } catch (e) {
         res.json({ status: 'offline', ms: 0 });
     }
