@@ -90,5 +90,40 @@ pm2 startup
 pm2 save
 ```
 
+---
+
+## Panduan Update Aplikasi
+
+Jika ada pembaruan (update) terbaru di repositori GitHub, Anda dapat melakukan update tanpa takut kehilangan data layanan (`data.json` dan `settings.json`) yang sudah ada. Ikuti langkah-langkah berikut:
+
+### 1. Masuk ke Direktori Aplikasi
+Pastikan Anda berada di dalam folder instalasi aplikasi:
+```bash
+cd /opt/localdash
+```
+
+### 2. Tarik Pembaruan dari GitHub
+Gunakan perintah `git pull` untuk mengambil kode terbaru dari repositori:
+```bash
+git pull origin main
+```
+*(Catatan: Sesuaikan `main` jika branch yang digunakan adalah `master`)*
+
+### 3. Perbarui Dependensi (Jika Ada)
+Mungkin ada modul Node.js baru yang ditambahkan di pembaruan. Jalankan kembali:
+```bash
+npm install
+```
+
+### 4. Restart Aplikasi
+Jika Anda menjalankan aplikasi dengan PM2, cukup restart aplikasinya agar pembaruan bisa langsung diterapkan:
+```bash
+pm2 restart localdash
+```
+
+Dashboard kini berhasil diperbarui!
+
+---
+
 ### Selesai! 🎉
 LocalDash PRO kini sudah terpasang dan berjalan secara permanen (otomatis *startup*) di LXC Proxmox Anda!
