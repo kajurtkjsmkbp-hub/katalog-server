@@ -247,20 +247,111 @@ app.get('/api/status', async (req, res) => {
 // --- ENDPOINT SYSINFO & BACKUP ---
 const os = require('os');
 
-app.get('/api/sysinfo', (req, res) => {
+// Helper untuk menghitung CPU & RAM secara real-time (Mendukung Proxmox LXC cgroup & OS Tick)
+let lastCpuUsagePercent = 0.0;
+let lastOsCpuSample = getCpuTimes();
+let lastCgroupSample = getCgroupCpuUsage();
+
+function getCpuTimes() {
+    const cpus = os.cpus();
+    let idle = 0, total = 0;
+    for (const cpu of cpus) {
+        for (const type in cpu.times) {
+            total += cpu.times[type];
+        }
+        idle += cpu.times.idle;
+    }
+    return { idle, total };
+}
+
+function getCgroupCpuUsage() {
+    try {
+        // cgroup v2 (Proxmox VE 7/8 default)
+        if (fs.existsSync('/sys/fs/cgroup/cpu.stat')) {
+            const content = fs.readFileSync('/sys/fs/cgroup/cpu.stat', 'utf8');
+            const match = content.match(/usage_usec\s+(\d+)/);
+            if (match) {
+                return { timestamp: Date.now(), usec: parseInt(match[1], 10) };
+            }
+        }
+        // cgroup v1
+        if (fs.existsSync('/sys/fs/cgroup/cpuacct/cpuacct.usage')) {
+            const content = fs.readFileSync('/sys/fs/cgroup/cpuacct/cpuacct.usage', 'utf8');
+            const ns = parseInt(content.trim(), 10);
+            if (!isNaN(ns)) {
+                return { timestamp: Date.now(), usec: Math.floor(ns / 1000) };
+            }
+        }
+    } catch (e) {}
+    return null;
+}
+
+function sampleCpu() {
+    const cpuCores = Math.max(1, os.cpus().length);
+    
+    // Prioritas 1: Baca langsung alokasi container Proxmox LXC via cgroups
+    const currentCgroup = getCgroupCpuUsage();
+    if (currentCgroup && lastCgroupSample) {
+        const timeDiffMs = currentCgroup.timestamp - lastCgroupSample.timestamp;
+        const usecDiff = currentCgroup.usec - lastCgroupSample.usec;
+        if (timeDiffMs > 0 && usecDiff >= 0) {
+            const totalCapacityUsec = timeDiffMs * 1000 * cpuCores;
+            const percent = (usecDiff / totalCapacityUsec) * 100;
+            lastCpuUsagePercent = Math.max(0, Math.min(100, percent)).toFixed(1);
+            lastCgroupSample = currentCgroup;
+            return;
+        }
+    }
+    if (currentCgroup) {
+        lastCgroupSample = currentCgroup;
+    }
+
+    // Prioritas 2: Fallback ke CPU tick delta (Baremetal, VM, Windows dev)
+    const currentOsCpu = getCpuTimes();
+    if (lastOsCpuSample) {
+        const deltaTotal = currentOsCpu.total - lastOsCpuSample.total;
+        const deltaIdle = currentOsCpu.idle - lastOsCpuSample.idle;
+        if (deltaTotal > 0) {
+            const usage = ((deltaTotal - deltaIdle) / deltaTotal) * 100;
+            lastCpuUsagePercent = Math.max(0, Math.min(100, usage)).toFixed(1);
+        }
+    }
+    lastOsCpuSample = currentOsCpu;
+}
+
+// Sampling berkala setiap 1.5 detik agar realtime
+setInterval(sampleCpu, 1500);
+
+function getRealRamUsage() {
+    try {
+        // cgroup v2
+        if (fs.existsSync('/sys/fs/cgroup/memory.current') && fs.existsSync('/sys/fs/cgroup/memory.max')) {
+            const current = parseInt(fs.readFileSync('/sys/fs/cgroup/memory.current', 'utf8').trim(), 10);
+            const max = parseInt(fs.readFileSync('/sys/fs/cgroup/memory.max', 'utf8').trim(), 10);
+            if (!isNaN(current) && !isNaN(max) && max > 0) {
+                return ((current / max) * 100).toFixed(1);
+            }
+        }
+        // cgroup v1
+        if (fs.existsSync('/sys/fs/cgroup/memory/memory.usage_in_bytes') && fs.existsSync('/sys/fs/cgroup/memory/memory.limit_in_bytes')) {
+            const current = parseInt(fs.readFileSync('/sys/fs/cgroup/memory/memory.usage_in_bytes', 'utf8').trim(), 10);
+            const max = parseInt(fs.readFileSync('/sys/fs/cgroup/memory/memory.limit_in_bytes', 'utf8').trim(), 10);
+            if (!isNaN(current) && !isNaN(max) && max > 0 && max < 1099511627776) {
+                return ((current / max) * 100).toFixed(1);
+            }
+        }
+    } catch (e) {}
+
     const totalRam = os.totalmem();
     const freeRam = os.freemem();
     const usedRam = totalRam - freeRam;
-    const ramUsagePercent = ((usedRam / totalRam) * 100).toFixed(1);
-    
-    const cpuCores = os.cpus().length;
-    const loadAvg = os.loadavg()[0]; // load rata-rata 1 menit
-    // Load avg bisa lebih besar dari jumlah core, cap di 100%
-    const cpuUsagePercent = Math.min(((loadAvg / cpuCores) * 100), 100).toFixed(1);
+    return ((usedRam / totalRam) * 100).toFixed(1);
+}
 
+app.get('/api/sysinfo', (req, res) => {
     res.json({
-        ram: ramUsagePercent,
-        cpu: cpuUsagePercent,
+        ram: getRealRamUsage(),
+        cpu: lastCpuUsagePercent,
         uptime: os.uptime()
     });
 });

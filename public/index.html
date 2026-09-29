@@ -721,10 +721,39 @@
         try {
             const res = await fetch('/api/sysinfo');
             const data = await res.json();
-            document.getElementById('sys-cpu').innerText = `${data.cpu}%`;
-            document.getElementById('sys-cpu-bar').style.width = `${data.cpu}%`;
-            document.getElementById('sys-ram').innerText = `${data.ram}%`;
-            document.getElementById('sys-ram-bar').style.width = `${data.ram}%`;
+            
+            const cpuVal = parseFloat(data.cpu) || 0;
+            const ramVal = parseFloat(data.ram) || 0;
+
+            const cpuText = document.getElementById('sys-cpu');
+            const cpuBar = document.getElementById('sys-cpu-bar');
+            cpuText.innerText = `${data.cpu}%`;
+            cpuBar.style.width = `${Math.min(100, Math.max(0, cpuVal))}%`;
+            if (cpuVal > 85) {
+                cpuBar.style.backgroundColor = '#ef4444';
+                cpuText.className = 'font-bold text-red-400';
+            } else if (cpuVal > 60) {
+                cpuBar.style.backgroundColor = '#f59e0b';
+                cpuText.className = 'font-medium text-amber-400';
+            } else {
+                cpuBar.style.backgroundColor = '#0ea5e9';
+                cpuText.className = '';
+            }
+
+            const ramText = document.getElementById('sys-ram');
+            const ramBar = document.getElementById('sys-ram-bar');
+            ramText.innerText = `${data.ram}%`;
+            ramBar.style.width = `${Math.min(100, Math.max(0, ramVal))}%`;
+            if (ramVal > 90) {
+                ramBar.style.backgroundColor = '#ef4444';
+                ramText.className = 'font-bold text-red-400';
+            } else if (ramVal > 75) {
+                ramBar.style.backgroundColor = '#f59e0b';
+                ramText.className = 'font-medium text-amber-400';
+            } else {
+                ramBar.style.backgroundColor = '#22c55e';
+                ramText.className = '';
+            }
         } catch(e) {}
     }
 
@@ -794,7 +823,7 @@
         }
     }
 
-    setInterval(fetchSysInfo, 5000);
+    setInterval(fetchSysInfo, 3000);
     setInterval(updateGreeting, 1000);
     updateGreeting();
     fetchSysInfo();
