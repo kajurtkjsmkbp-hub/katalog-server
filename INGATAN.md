@@ -47,14 +47,16 @@
    - `POST /api/upload-bg` (Auth) : Upload berkas gambar latar belakang ke folder `public/uploads/`.
 3. **Katalog Layanan (Links):**
    - `GET /api/links` : Mengambil daftar layanan terurut berdasarkan `order`.
-   - `POST /api/links` (Auth) : Menambah layanan baru.
-   - `PUT /api/links/:id` (Auth) : Mengubah data layanan.
+   - `POST /api/links` (Auth) : Menambah layanan baru (menerima `name`, `url`, `category`, `customIcon`, `description`, `pinned`).
+   - `PUT /api/links/:id` (Auth) : Mengubah data layanan (`description` dan `pinned` didukung).
    - `PUT /api/links/reorder` (Auth) : Menyimpan urutan baru hasil drag-and-drop.
    - `DELETE /api/links/:id` (Auth) : Menghapus layanan.
-4. **Health Check & Latensi:**
-   - `GET /api/status?url=...` : Cek ketersediaan layanan (*HTTP/HTTPS response code 200-499 dianggap online; socket TCP ping fallback*) dengan waktu latensi ms. Polling otomatis berkala di UI.
-5. **System Monitor & Maintenance:**
-   - `GET /api/sysinfo` : Pemantauan CPU, RAM, dan Uptime server host.
+4. **Health Check, Latensi & Deteksi SSL:**
+   - `GET /api/status?url=...` : Cek ketersediaan layanan (*HTTP/HTTPS response code 200-499 dianggap online; socket TCP ping fallback*) dengan waktu latensi ms. Khusus HTTPS, secara otomatis mengekstrak sertifikat TLS (`valid`, `daysRemaining`, `validTo`, `issuer`). Polling otomatis berkala di UI setiap 10 detik.
+5. **System Monitor, Storage & Maintenance:**
+   - `GET /api/sysinfo` : Pemantauan CPU (cgroup Proxmox / OS tick delta), RAM (cgroup / freemem), DISK storage host (`fs.statfsSync` % terpakai, total GB, sisa GB), dan Uptime server host.
+   - `GET /api/network-notes` : Mengambil catatan teknis internal / scratchpad jaringan.
+   - `POST /api/network-notes` (Auth) : Menyimpan catatan teknis internal jaringan ke `settings.json`.
    - `GET /api/backup` (Auth) : Download backup `data.json` dan `settings.json` dalam satu file JSON.
    - `POST /api/restore` (Auth) : Restore data dan konfigurasi dari file backup.
 
