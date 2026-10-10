@@ -5,7 +5,7 @@
 
 ## 📌 1. PROFIL PENGGUNA & PREFERENSI SISTEM
 - **Bahasa Komunikasi:** Bahasa Indonesia (ramah, jelas, teknis, dan *to the point*).
-- **Domain Proyek:** **LocalDash PRO** (Katalog & Dashboard Layanan Server IT Lokal / Homelab untuk Proxmox LXC, TrueNAS, Raspberry Pi, dll).
+- **Domain Proyek:** **Khanza.NET LocalDash** (Katalog & Dashboard Layanan Server IT Lokal / Homelab untuk Proxmox LXC, TrueNAS, Raspberry Pi, dll).
 - **Lokasi Repositori:** `C:\Users\iphoenkz\Music\LMS-6Katalog`
 - **Default Port:** `3000` (dapat dikonfigurasi via env `PORT`).
 - **Prinsip Utama Aplikasi:**
@@ -92,3 +92,26 @@ C:\Users\iphoenkz\Music\LMS-6Katalog\
   - Perbaikan deteksi health check HTTP dan skema warna status dot (kuning: checking, hijau: online, merah: offline).
   - Dokumentasi panduan update aman dengan `git pull` & PM2 di `README.md`.
   - **Kalkulasi CPU & RAM Real-time Presisi:** Mengganti rumus `loadavg` dengan pembacaan cgroup v1/v2 Proxmox LXC dan delta CPU tick OS, disertai indikator visual dinamis (sky/green, amber, red) serta polling 3 detik.
+  - **Menu Kategori Navigasi Elegan (Top Pill Tabs):** Implementasi menu tab/pills kategori di bagian atas dengan counter badge, pendeteksi ikon otomatis, filter presisi (hanya kategori yang dipilih yang tampil di halaman), status tab tersimpan di `localStorage`, tombol kembali "Semua Kategori", serta sinkronisasi pencarian kartu dan drag-and-drop.
+  - **Pembaruan Branding & Footer Perusahaan:** Penyesuaian nama utama aplikasi menjadi **Khanza.NET LocalDash** serta penambahan badge resmi keanggotaan *"Khanza.NET LocalDash is a member of PT. Khanza Digital Nusantara"* di footer dengan desain elegan.
+  - **Overhaul Visual Mode Siang (Vibrant & High-Contrast Light Mode):** Peningkatan kontras teks judul section (tidak lagi pucat/samar), kartu layanan dengan latar putih solid + soft shadow elegan, kotak URL berubah menjadi code-badge terang, tombol aksi header putih bersih, jam analog dan indikator performa bergaris tegas, serta overlay frosted-blur 93% agar wallpaper background tidak mengganggu keterbacaan.
+  - **Live Service Status Badges (Total, Online, & Offline):** Penambahan widget ringkasan status layanan homelab real-time di atas menu navigasi kategori (`Total`, `Online` dengan pulsing green dot, `Offline` dengan red dot). Dilengkapi sinkronisasi status global instan tanpa flicker saat berpindah kategori serta pembaruan otomatis setiap 10 detik.
+  - **Penerapan 7 Fitur Esensial Homelab & Server Dashboard:**
+    1. **Tombol Refresh Manual:** Tombol "Cek Ulang" dengan ikon berputar (*spin animation*) untuk melakukan ping instan ke seluruh server tanpa menunggu interval otomatis.
+    2. **Filter Klik Badge Status (Troubleshooting Mode):** Mengklik badge Online atau Offline langsung menyaring daftar layanan di layar (misal memfokuskan pengecekan hanya pada server yang sedang down), disertai banner filter dan tombol reset cepat.
+    3. **Layanan Favorit (Starred / Pinned):** Kemampuan menyematkan layanan penting dengan tombol bintang ⭐ di setiap kartu, tab dedicated *"⭐ Favorit"* di bilah navigasi atas, serta penyimpanan preferensi di `localStorage` dan tersinkronisasi dengan opsi pin server.
+    4. **Keterangan / Tag Node Chip:** Field opsional keterangan/node (contoh: `Port 8006 • Node 101` atau `Server Utama`) pada form tambah/edit link yang ditampilkan rapi sebagai chip badge berikon tag di kartu layanan.
+    5. **Quick Copy IP / URL:** Tombol salin satu-klik pada kotak URL setiap kartu dengan animasi konfirmasi centang hijau dan toast feedback instan.
+    6. **Peringatan Suara Server Down:** Fitur notifikasi audio menggunakan *Web Audio API* bawaan peramban (tanpa perlu aset audio luar) yang membunyikan nada peringatan saat server yang sebelumnya online terdeteksi offline. Dilengkapi sakelar pengaktifan di modal pengaturan.
+    7. **Keyboard Shortcut Global & Toast System:** Shortcut keyboard instan (`/` untuk langsung fokus mencari layanan, `Escape` untuk menutup seluruh modal aktif atau keluar dari pencarian) serta sistem notifikasi toast (*toast container*) yang responsif dan elegan.
+  - **Penerapan 5 Fitur Lanjutan Berkelas Profesional:**
+    1. **Widget Monitoring Kapasitas Disk / Storage Host (`DISK`):** Pembacaan kapasitas penyimpanan host secara *native* (`fs.statfsSync`) yang terintegrasi pada widget sistem di samping CPU & RAM. Dilengkapi bilah warna dinamis (indigo, amber >75%, red >85%) dan tooltip detail kapasitas terpakai, total, dan sisa GB.
+    2. **Riwayat Kestabilan Uptime (Mini Sparkline Bars):** Pelacakan 5 riwayat ping terakhir per layanan yang divisualisasikan dengan 5 balok kecil horizontal (hijau = online, merah = offline) serta persentase keandalan (*uptime percentage*) langsung pada kartu layanan.
+    3. **Deteksi Sisa Hari Sertifikat SSL / HTTPS:** Server otomatis mengekstrak sertifikat TLS/SSL pada layanan HTTPS via `getPeerCertificate()`, menghitung sisa hari kedaluwarsa, dan menampilkan chip status sertifikat (hijau aman, atau kuning/oranye berkedip dengan peringatan jika tersisa < 14 hari).
+    4. **Papan Catatan Jaringan & IP Subnet (*Network Scratchpad*):** Panel catatan cepat terdedikasi (`#notesModal` & endpoint `/api/network-notes`) untuk menyimpan informasi konfigurasi Gateway, DNS Server, VLAN ID, alokasi static IP, dan port tanpa perlu dokumen eksternal.
+    5. **Ekspor Bookmark Browser Standar (*HTML Bookmark Export*):** Tombol ekspor satu-klik di modal pengaturan untuk mengunduh seluruh kategori dan tautan katalog ke format standar *Netscape Bookmark File* (`.html`) yang siap diimpor ke Google Chrome, Mozilla Firefox, Microsoft Edge, atau Safari.
+  - **Peningkatan Kontras & Keterbacaan Mode Gelap (Dark Mode High-Contrast Enhancement):**
+    - Meningkatkan kecerahan teks sekunder pudar (`text-slate-400` dinaikkan ke `#cbd5e1` / slate-300 dan `text-slate-300` dinaikkan ke `#f1f5f9` / slate-100).
+    - Memperjelas teks pembuka / greeting (*"Selamat Pagi, Sugeng Rawuh!"*) menjadi `text-slate-200 font-medium`.
+    - Merombak tampilan modal Catatan Jaringan & modal lainnya: teks deskripsi dikemas dalam *info-box* aksen biru langit (`bg-sky-500/10 border-sky-500/30 text-sky-200`), textarea dengan latar kontras tinggi `bg-black/60 border-slate-600`, dan teks placeholder yang tajam serta mudah dibaca.
+    - Peningkatan ketajaman kartu layanan (*glass card*) di mode gelap dengan latar `rgba(17, 24, 39, 0.85)` dan border halus yang menyala saat di-hover.

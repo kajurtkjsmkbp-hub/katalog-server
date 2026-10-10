@@ -118,7 +118,7 @@ app.get('/api/links', (req, res) => {
 });
 
 app.post('/api/links', requireAuth, (req, res) => {
-    const { name, url, category, customIcon } = req.body;
+    const { name, url, category, customIcon, description, pinned } = req.body;
     const links = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
     
     const existingCat = links.find(l => l.category.toLowerCase() === category.toLowerCase());
@@ -134,6 +134,8 @@ app.post('/api/links', requireAuth, (req, res) => {
     const newLink = {
         id: Date.now(),
         name, url, category, icon, color,
+        description: description || '',
+        pinned: !!pinned,
         order: links.length
     };
     
@@ -157,7 +159,7 @@ app.put('/api/links/reorder', requireAuth, (req, res) => {
 
 app.put('/api/links/:id', requireAuth, (req, res) => {
     const id = parseInt(req.params.id);
-    const { name, url, category, customIcon } = req.body;
+    const { name, url, category, customIcon, description, pinned } = req.body;
     let links = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
     const link = links.find(l => l.id === id);
     if (!link) return res.status(404).json({ error: 'Not found' });
@@ -166,9 +168,11 @@ app.put('/api/links/:id', requireAuth, (req, res) => {
     link.url = url;
     link.category = category;
     if (customIcon) link.icon = customIcon;
+    if (description !== undefined) link.description = description;
+    if (pinned !== undefined) link.pinned = !!pinned;
 
     fs.writeFileSync(DATA_FILE, JSON.stringify(links, null, 2));
-    res.json({ success: true });
+    res.json({ success: true, link });
 });
 
 app.delete('/api/links/:id', requireAuth, (req, res) => {
@@ -205,17 +209,35 @@ function checkHostPort(host, port, timeout = 2000) {
 function checkHttp(urlString, timeout = 3000) {
     return new Promise((resolve) => {
         const startTime = Date.now();
-        const client = urlString.startsWith('https') ? https : http;
+        const isHttps = urlString.startsWith('https');
+        const client = isHttps ? https : http;
         
         const req = client.get(urlString, {
             timeout: timeout,
             rejectUnauthorized: false
         }, (res) => {
+            let sslInfo = null;
+            if (isHttps) {
+                try {
+                    const cert = res.socket && res.socket.getPeerCertificate ? res.socket.getPeerCertificate() : null;
+                    if (cert && cert.valid_to) {
+                        const validTo = new Date(cert.valid_to);
+                        const daysRemaining = Math.round((validTo.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+                        sslInfo = {
+                            valid: daysRemaining > 0,
+                            daysRemaining: daysRemaining,
+                            validTo: cert.valid_to,
+                            issuer: cert.issuer?.O || cert.issuer?.CN || 'Unknown'
+                        };
+                    }
+                } catch (e) {}
+            }
+
             // Treat 200-499 as online, 500+ as offline (especially 502/521/522 for reverse proxies)
             if (res.statusCode >= 200 && res.statusCode < 500) {
-                resolve({ status: 'online', ms: Date.now() - startTime });
+                resolve({ status: 'online', ms: Date.now() - startTime, ssl: sslInfo });
             } else {
-                resolve({ status: 'offline', ms: 0 });
+                resolve({ status: 'offline', ms: 0, ssl: sslInfo });
             }
             res.resume();
         });
@@ -348,12 +370,60 @@ function getRealRamUsage() {
     return ((usedRam / totalRam) * 100).toFixed(1);
 }
 
+function getDiskUsage() {
+    try {
+        if (typeof fs.statfsSync === 'function') {
+            const rootPath = process.platform === 'win32' ? process.cwd() : '/';
+            const stat = fs.statfsSync(rootPath);
+            const total = stat.bsize * stat.blocks;
+            const free = stat.bsize * stat.bavail;
+            if (total > 0) {
+                const used = total - free;
+                const percent = ((used / total) * 100).toFixed(1);
+                const totalGB = (total / (1024 ** 3)).toFixed(1);
+                const usedGB = (used / (1024 ** 3)).toFixed(1);
+                const freeGB = (free / (1024 ** 3)).toFixed(1);
+                return { percent, totalGB, usedGB, freeGB };
+            }
+        }
+    } catch (e) {}
+    return { percent: '0.0', totalGB: '0', usedGB: '0', freeGB: '0' };
+}
+
 app.get('/api/sysinfo', (req, res) => {
+    const disk = getDiskUsage();
     res.json({
         ram: getRealRamUsage(),
         cpu: lastCpuUsagePercent,
+        disk: disk.percent,
+        diskInfo: disk,
         uptime: os.uptime()
     });
+});
+
+// --- ENDPOINT CATATAN JARINGAN (NETWORK SCRATCHPAD) ---
+app.get('/api/network-notes', (req, res) => {
+    try {
+        if (fs.existsSync(SETTINGS_FILE)) {
+            const settings = JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8'));
+            return res.json({ notes: settings.networkNotes || '' });
+        }
+    } catch (e) {}
+    res.json({ notes: '' });
+});
+
+app.post('/api/network-notes', requireAuth, (req, res) => {
+    try {
+        let settings = { background: '', theme: 'dark' };
+        if (fs.existsSync(SETTINGS_FILE)) {
+            settings = JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8'));
+        }
+        settings.networkNotes = req.body.notes || '';
+        fs.writeFileSync(SETTINGS_FILE, JSON.stringify(settings, null, 2));
+        res.json({ success: true });
+    } catch (e) {
+        res.status(500).json({ error: 'Gagal menyimpan catatan jaringan' });
+    }
 });
 
 app.get('/api/backup', requireAuth, (req, res) => {

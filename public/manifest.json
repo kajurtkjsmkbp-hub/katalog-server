@@ -1,6 +1,6 @@
 {
-  "name": "LocalDash PRO",
-  "short_name": "LocalDash",
+  "name": "Khanza.NET LocalDash",
+  "short_name": "Khanza.NET",
   "description": "Katalog Sentral Layanan & Website Lokal Anda",
   "start_url": "/",
   "display": "standalone",

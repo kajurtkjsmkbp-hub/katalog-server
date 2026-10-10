@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LocalDash Pro</title>
+    <title>Khanza.NET LocalDash</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
@@ -21,32 +21,354 @@
         #particles-js {
             position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.6;
         }
-        body.light-mode { background-color: #f8fafc; color: #0f172a; }
-        body.light-mode .overlay { background: rgba(248, 250, 252, 0.85); }
-        body.light-mode .glass-card { background: rgba(255, 255, 255, 0.7); border-color: rgba(0,0,0,0.1); color: #0f172a; }
-        body.light-mode .glass-card h3 { color: #0f172a; }
-        body.light-mode .glass-card .bg-slate-800 { background: #e2e8f0; color: #334155; }
-        body.light-mode header h1 { color: #0f172a; }
-        body.light-mode .text-slate-200 { color: #1e293b; }
-        body.light-mode .text-slate-300 { color: #334155; }
-        body.light-mode .text-slate-400 { color: #475569; }
-        body.light-mode input.bg-slate-800 { background: #ffffff; border-color: #cbd5e1; color: #0f172a; }
-        body.light-mode .bg-slate-800 { background: #ffffff; }
-        body.light-mode .border-slate-700 { border-color: #cbd5e1; }
-        body.light-mode .analog-clock { background: rgba(255,255,255,0.7); box-shadow: 0 0 10px rgba(0,0,0,0.1); color: #334155; }
-        body.light-mode .hour-hand { background: #334155; }
-        body.light-mode .min-hand { background: #0f172a; }
-        
-        .overlay {
-            background: rgba(15, 23, 42, 0.85); /* Dark overlay */
+        /* ==================== VIBRANT & HIGH-CONTRAST LIGHT MODE ==================== */
+        body.light-mode {
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+        body.light-mode .overlay {
+            background: rgba(248, 250, 252, 0.93);
+            backdrop-filter: blur(12px);
             min-height: 100vh;
         }
-        .glass-card {
-            background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1); transition: transform 0.2s, box-shadow 0.2s;
+        /* Header & Brand */
+        body.light-mode header {
+            border-color: #e2e8f0 !important;
+        }
+        body.light-mode header h1 {
+            background: linear-gradient(135deg, #0284c7 0%, #1d4ed8 100%) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            filter: drop-shadow(0 1px 2px rgba(2, 132, 199, 0.15));
+        }
+        body.light-mode header h1 .border-yellow-500 {
+            background: #fef3c7 !important;
+            color: #b45309 !important;
+            border-color: #f59e0b !important;
+            -webkit-text-fill-color: #b45309 !important;
+            font-weight: 800;
+        }
+        body.light-mode #greetingText {
+            color: #475569 !important;
+            font-weight: 600;
+        }
+        /* Analog Clock */
+        body.light-mode .analog-clock {
+            background: #ffffff;
+            border: 2px solid #38bdf8;
+            box-shadow: 0 4px 15px -2px rgba(14, 165, 233, 0.25), inset 0 2px 4px rgba(0,0,0,0.03);
+            color: #0f172a;
+        }
+        body.light-mode .hour-hand { background: #0f172a; }
+        body.light-mode .min-hand { background: #0284c7; }
+        body.light-mode .second-hand { background: #ef4444; }
+        body.light-mode .center-dot { background: #0284c7; }
+        /* SysInfo Widget */
+        body.light-mode .sysinfo-bar {
+            background: #e2e8f0;
+        }
+        body.light-mode #sys-cpu, body.light-mode #sys-ram {
+            color: #0f172a;
+            font-weight: 700;
+        }
+        body.light-mode header .border-slate-700 {
+            border-color: #e2e8f0 !important;
+        }
+        /* Search Bar & Header Buttons */
+        body.light-mode #searchInput {
+            background: #ffffff !important;
+            border-color: #cbd5e1 !important;
+            color: #0f172a !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        body.light-mode #searchInput::placeholder {
+            color: #94a3b8;
+        }
+        body.light-mode #searchInput:focus {
+            border-color: #0284c7 !important;
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+        }
+        body.light-mode header button.bg-slate-700 {
+            background: #ffffff !important;
+            color: #334155 !important;
+            border: 1px solid #cbd5e1 !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        body.light-mode header button.bg-slate-700:hover {
+            background: #f8fafc !important;
+            color: #0284c7 !important;
+            border-color: #38bdf8 !important;
+        }
+        body.light-mode header button[title="Ganti Tema"] #theme-icon {
+            color: #f59e0b !important;
+        }
+        body.light-mode header button.guest-only {
+            background: #ffffff !important;
+            color: #0f172a !important;
+            border-color: #cbd5e1 !important;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        /* Category Navigation Bar */
+        body.light-mode #categoryNavSection .text-slate-400 {
+            color: #334155 !important;
+            font-weight: 800;
+        }
+        body.light-mode #categoryStats {
+            color: #0284c7 !important;
+            font-weight: 700;
+        }
+        body.light-mode .cat-nav-wrapper {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.06);
+        }
+        body.light-mode .cat-tab-btn:not(.active) {
+            background: #ffffff;
+            border-color: #e2e8f0;
+            color: #334155;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+        }
+        body.light-mode .cat-tab-btn:not(.active):hover {
+            background: #f0f9ff;
+            color: #0284c7;
+            border-color: #7dd3fc;
+            transform: translateY(-1px);
+        }
+        body.light-mode .cat-tab-btn:not(.active) .cat-badge {
+            background: #f1f5f9;
+            color: #334155;
+            font-weight: 700;
+            border: 1px solid #e2e8f0;
+        }
+        body.light-mode .cat-tab-btn.active {
+            background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+            color: #ffffff;
+            border-color: #0284c7;
+            box-shadow: 0 4px 14px -1px rgba(2, 132, 199, 0.4);
+        }
+        body.light-mode .cat-tab-btn.active .cat-badge {
+            background: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+        }
+        /* Section Category Headers */
+        body.light-mode [data-section-category] h2 {
+            color: #0f172a !important;
+            font-weight: 800;
+        }
+        body.light-mode [data-section-category] h2 span {
+            color: #0f172a !important;
+        }
+        body.light-mode [data-section-category] .border-b {
+            border-color: #e2e8f0 !important;
+        }
+        body.light-mode [data-section-category] span.bg-slate-800 {
+            background: #e0f2fe !important;
+            color: #0369a1 !important;
+            border: 1px solid #bae6fd !important;
+            font-weight: 700;
+        }
+        body.light-mode [data-section-category] button[title*="semua kategori"] {
+            background: #e0f2fe !important;
+            color: #0284c7 !important;
+            border-color: #7dd3fc !important;
+            font-weight: 700;
+        }
+        body.light-mode [data-section-category] button[title*="semua kategori"]:hover {
+            background: #bae6fd !important;
+            color: #0369a1 !important;
+        }
+        /* Service Cards (glass-card) */
+        body.light-mode .glass-card {
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.06), 0 2px 4px -1px rgba(15, 23, 42, 0.04);
+            color: #0f172a;
+        }
+        body.light-mode .glass-card:hover {
+            transform: translateY(-4px);
+            border-color: #38bdf8;
+            box-shadow: 0 16px 28px -4px rgba(14, 165, 233, 0.18), 0 6px 12px -2px rgba(15, 23, 42, 0.06);
+        }
+        body.light-mode .glass-card h3 {
+            color: #0f172a !important;
+            font-weight: 800;
+        }
+        /* Card URL Box */
+        body.light-mode .glass-card [class*="bg-slate-800"] {
+            background: #f8fafc !important;
+            color: #475569 !important;
+            border: 1px solid #e2e8f0 !important;
+            font-weight: 600;
+        }
+        /* Card Buttons (Quick View & Admin) */
+        body.light-mode .glass-card button[title*="Quick View"] {
+            background: #ffffff !important;
+            border: 1px solid #cbd5e1 !important;
+            color: #334155 !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+        }
+        body.light-mode .glass-card button[title*="Quick View"]:hover {
+            background: #f0f9ff !important;
+            color: #0284c7 !important;
+            border-color: #38bdf8 !important;
+        }
+        body.light-mode .admin-card-controls {
+            background: #ffffff !important;
+            border: 1px solid #cbd5e1 !important;
+            color: #334155 !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        body.light-mode .admin-card-controls button {
+            color: #475569 !important;
+        }
+        body.light-mode .admin-card-controls button:hover {
+            color: #0284c7 !important;
+        }
+        body.light-mode .admin-card-controls .drag-handle {
+            color: #94a3b8 !important;
+        }
+        body.light-mode .admin-card-controls .drag-handle:hover {
+            color: #0f172a !important;
+        }
+        /* Global Text & Border Utility Overrides */
+        body.light-mode .text-slate-100 { color: #0f172a !important; }
+        body.light-mode .text-slate-200 { color: #1e293b !important; }
+        body.light-mode .text-slate-300 { color: #334155 !important; }
+        body.light-mode .text-slate-400 { color: #475569 !important; }
+        body.light-mode .text-slate-500 { color: #64748b !important; }
+        body.light-mode .border-slate-700,
+        body.light-mode .border-slate-700\/50,
+        body.light-mode .border-slate-700\/60,
+        body.light-mode .border-slate-700\/80 { border-color: #e2e8f0 !important; }
+        /* Footer */
+        body.light-mode footer {
+            border-color: #e2e8f0 !important;
+        }
+        body.light-mode footer p.text-slate-300 {
+            color: #334155 !important;
+            font-weight: 700;
+        }
+        body.light-mode footer .inline-flex {
+            background: #ffffff !important;
+            border: 1px solid #cbd5e1 !important;
+            color: #334155 !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        body.light-mode footer strong.text-slate-100 {
+            color: #0f172a !important;
+        }
+        /* Modals in Light Mode */
+        body.light-mode #loginModal .bg-slate-800,
+        body.light-mode #addModal .bg-slate-800,
+        body.light-mode #settingsModal .bg-slate-800,
+        body.light-mode #quickViewModal .bg-slate-800 {
+            background: #ffffff !important;
+            color: #0f172a !important;
+            border: 1px solid #e2e8f0 !important;
+            box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.25);
+        }
+        body.light-mode #loginModal .bg-slate-900,
+        body.light-mode #addModal .bg-slate-900,
+        body.light-mode #settingsModal .bg-slate-900 {
+            background: #f8fafc !important;
+            border: 1px solid #cbd5e1 !important;
+            color: #0f172a !important;
+        }
+        body.light-mode #quickViewModal .bg-slate-900 {
+            background: #f1f5f9 !important;
+            border-color: #e2e8f0 !important;
+        }
+        body.light-mode #quickViewTitle {
+            color: #0284c7 !important;
+        }
+        body.light-mode .icon-option {
+            color: #64748b;
+        }
+        body.light-mode .icon-option:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+        /* Status Badges in Light Mode */
+        body.light-mode #serviceStatusBadges .bg-slate-800\/80 {
+            background: #ffffff !important;
+            border-color: #cbd5e1 !important;
+            color: #334155 !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        body.light-mode #serviceStatusBadges #stat-total {
+            color: #0f172a !important;
+        }
+        body.light-mode #serviceStatusBadges .bg-emerald-500\/10 {
+            background: #ecfdf5 !important;
+            border-color: #a7f3d0 !important;
+            color: #047857 !important;
+            box-shadow: 0 1px 3px rgba(16, 185, 129, 0.08);
+        }
+        body.light-mode #serviceStatusBadges #stat-online {
+            color: #065f46 !important;
+        }
+        body.light-mode #serviceStatusBadges .bg-rose-500\/10 {
+            background: #fff1f2 !important;
+            border-color: #fecdd3 !important;
+            color: #be123c !important;
+            box-shadow: 0 1px 3px rgba(244, 63, 94, 0.08);
+        }
+        body.light-mode #serviceStatusBadges #stat-offline {
+            color: #9f1239 !important;
+        }
+        
+        /* --- PENINGKATAN KONTRAS TINGGI MODE GELAP / MALAM --- */
+        body:not(.light-mode) {
+            color: #f8fafc;
+        }
+        body:not(.light-mode) .overlay {
+            background: rgba(11, 15, 25, 0.88); /* Latar pekat & jernih */
+            min-height: 100vh;
+        }
+        /* Naikkan kontras teks abu-abu yang pudar di dark mode */
+        body:not(.light-mode) .text-slate-400 {
+            color: #cbd5e1 !important; /* Ditingkatkan dari #94a3b8 ke slate-300 yang terang & jelas */
+        }
+        body:not(.light-mode) .text-slate-500 {
+            color: #94a3b8 !important; /* Ditingkatkan dari #64748b ke #94a3b8 */
+        }
+        body:not(.light-mode) .text-slate-300 {
+            color: #f1f5f9 !important; /* Ditingkatkan ke slate-100 */
+        }
+        /* Placeholder & Form inputs kontras tinggi */
+        body:not(.light-mode) textarea::placeholder,
+        body:not(.light-mode) input::placeholder {
+            color: #94a3b8 !important;
+            opacity: 0.9 !important;
+        }
+        body:not(.light-mode) textarea,
+        body:not(.light-mode) input:not([type="checkbox"]) {
+            color: #f8fafc !important;
+        }
+        body:not(.light-mode) .glass-card {
+            background: rgba(17, 24, 39, 0.85); backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.12); transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.5);
             cursor: pointer;
         }
-        .glass-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5); border-color: rgba(56, 189, 248, 0.5); }
+        body:not(.light-mode) .glass-card:hover {
+            transform: translateY(-5px);
+            background: rgba(24, 33, 53, 0.95);
+            box-shadow: 0 12px 30px -5px rgba(0, 0, 0, 0.7);
+            border-color: rgba(56, 189, 248, 0.6);
+        }
+        body:not(.light-mode) .glass-card h3 {
+            color: #ffffff !important;
+        }
+        /* Modal di mode gelap */
+        body:not(.light-mode) .bg-slate-800 {
+            background-color: #111827 !important;
+            border-color: #374151 !important;
+        }
+        body:not(.light-mode) .bg-slate-900 {
+            background-color: #030712 !important;
+            border-color: #374151 !important;
+        }
         .status-dot {
             width: 12px; height: 12px; border-radius: 50%; display: inline-block;
             box-shadow: 0 0 8px currentColor;
@@ -78,6 +400,17 @@
         .cat-collapse.collapsed { max-height: 0; opacity: 0; }
         .cat-chevron { transition: transform 0.3s ease; }
         .cat-chevron.collapsed { transform: rotate(-90deg); }
+
+        .cat-tab-btn {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @keyframes fadeInFast {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeInFast 0.25s ease-out forwards;
+        }
 
         /* Jam Analog */
         .analog-clock {
@@ -130,42 +463,51 @@
                 </div>
 
                 <div>
-                    <h1 class="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-600 flex items-center">
-                        <i class="fa-solid fa-server mr-3 text-sky-500"></i>LocalDash <span class="text-xs text-yellow-500 border border-yellow-500 px-2 py-1 rounded ml-3">PRO</span>
+                    <h1 class="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-600 flex items-center">
+                        <i class="fa-solid fa-server mr-3 text-sky-500"></i>Khanza.NET LocalDash <span class="text-xs text-yellow-500 border border-yellow-500 px-2 py-1 rounded ml-3">PRO</span>
                     </h1>
-                    <p id="greetingText" class="text-slate-400 mt-2 text-lg">Memuat...</p>
+                    <p id="greetingText" class="text-slate-200 mt-1.5 text-base md:text-lg font-medium">Memuat...</p>
                 </div>
                 
-                <!-- SysInfo Widget -->
-                <div class="hidden md:flex gap-4 ml-6 border-l border-slate-700 pl-6 text-sm text-slate-300">
-                    <div class="w-24">
-                        <div class="flex justify-between"><span>CPU</span><span id="sys-cpu">0%</span></div>
+                <!-- SysInfo Widget (CPU, RAM, DISK) -->
+                <div class="hidden md:flex gap-3.5 ml-6 border-l border-slate-700 pl-6 text-sm text-slate-300">
+                    <div class="w-20">
+                        <div class="flex justify-between text-xs"><span>CPU</span><span id="sys-cpu">0%</span></div>
                         <div class="sysinfo-bar"><div id="sys-cpu-bar" class="sysinfo-fill" style="width: 0%"></div></div>
                     </div>
-                    <div class="w-24">
-                        <div class="flex justify-between"><span>RAM</span><span id="sys-ram">0%</span></div>
+                    <div class="w-20">
+                        <div class="flex justify-between text-xs"><span>RAM</span><span id="sys-ram">0%</span></div>
                         <div class="sysinfo-bar"><div id="sys-ram-bar" class="sysinfo-fill bg-green-500" style="width: 0%"></div></div>
+                    </div>
+                    <div class="w-20 cursor-help" id="sys-disk-container" title="Kapasitas Disk Storage Host">
+                        <div class="flex justify-between text-xs"><span>DISK</span><span id="sys-disk">0%</span></div>
+                        <div class="sysinfo-bar"><div id="sys-disk-bar" class="sysinfo-fill bg-indigo-500" style="width: 0%"></div></div>
                     </div>
                 </div>
             </div>
-            <div class="flex gap-3 md:gap-4 items-center flex-wrap justify-end">
+            <div class="flex gap-2.5 md:gap-3 items-center flex-wrap justify-end">
                 <div class="relative w-full md:w-auto">
-                    <input type="text" id="searchInput" placeholder="Cari layanan atau tekan Enter u/ Google..." class="bg-slate-800 text-white rounded-lg pl-10 pr-4 py-2 border border-slate-700 focus:outline-none focus:border-sky-500 w-full md:w-64 transition-colors">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400"></i>
+                    <input type="text" id="searchInput" placeholder="Cari layanan (Tekan /)..." class="bg-slate-800 text-white rounded-lg pl-10 pr-9 py-2 border border-slate-700 focus:outline-none focus:border-sky-500 w-full md:w-64 transition-colors text-sm">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400"></i>
+                    <span class="absolute right-3 top-2 text-[10px] font-mono text-slate-400 bg-slate-700/60 px-1.5 py-0.5 rounded border border-slate-600/50 pointer-events-none hidden sm:inline-block" title="Tekan tombol / untuk mencari">/</span>
                 </div>
                 
-                <button onclick="toggleTheme()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg font-medium transition-colors items-center gap-2" title="Ganti Tema">
+                <button onclick="toggleTheme()" class="bg-slate-700 hover:bg-slate-600 text-white px-3 py-2 rounded-lg font-medium transition-colors items-center gap-2" title="Ganti Tema">
                     <i class="fa-solid fa-moon" id="theme-icon"></i>
                 </button>
 
-                <!-- Admin Buttons -->
-                <button onclick="openAddForm()" class="admin-only bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-lg font-medium transition-colors items-center gap-2">
+                <!-- Admin & Scratchpad Buttons -->
+                <button onclick="openNetworkNotes()" class="bg-slate-700 hover:bg-slate-600 text-white px-3 py-2 rounded-lg font-medium transition-colors items-center gap-1.5 text-xs flex" title="Papan Catatan Jaringan & IP Subnet">
+                    <i class="fa-solid fa-clipboard-list text-sky-400"></i>
+                    <span class="hidden xl:inline">Catatan</span>
+                </button>
+                <button onclick="openAddForm()" class="admin-only bg-sky-500 hover:bg-sky-600 text-white px-3.5 py-2 rounded-lg font-medium transition-colors items-center gap-1.5 text-xs">
                     <i class="fa-solid fa-plus"></i> Tambah
                 </button>
-                <button onclick="openModal('settingsModal')" class="admin-only bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg font-medium transition-colors items-center gap-2" title="Pengaturan">
+                <button onclick="openModal('settingsModal')" class="admin-only bg-slate-700 hover:bg-slate-600 text-white px-3 py-2 rounded-lg font-medium transition-colors items-center gap-2" title="Pengaturan">
                     <i class="fa-solid fa-gear"></i>
                 </button>
-                <button onclick="logout()" class="admin-only bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition-colors items-center gap-2 shadow-lg shadow-red-500/30" title="Keluar">
+                <button onclick="logout()" class="admin-only bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg font-medium transition-colors items-center gap-1.5 text-xs shadow-lg shadow-red-500/30" title="Keluar">
                     <i class="fa-solid fa-right-from-bracket"></i> Logout
                 </button>
 
@@ -176,17 +518,78 @@
             </div>
         </header>
 
+        <!-- Menu Kategori di Atas (Category Tabs Navigation) -->
+        <div id="categoryNavSection" class="mb-8">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3 px-1">
+                <div class="flex items-center gap-2.5">
+                    <span class="text-xs uppercase tracking-wider text-slate-400 font-bold flex items-center gap-1.5">
+                        <i class="fa-solid fa-layer-group text-sky-400"></i> Kategori Layanan
+                    </span>
+                    <span id="categoryStats" class="text-xs text-slate-400 font-medium"></span>
+                </div>
+
+                <!-- Live Service Status Badges (Total, Online, Offline) + Refresh Button -->
+                <div id="serviceStatusBadges" class="flex items-center gap-2 flex-wrap">
+                    <!-- Total Filter -->
+                    <button id="badgeFilterAll" onclick="filterByStatus('all')" class="status-badge-btn flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/80 text-xs font-semibold text-slate-300 shadow-sm backdrop-blur-sm cursor-pointer transition-all active:scale-95" title="Tampilkan Semua Status Server">
+                        <i class="fa-solid fa-server text-sky-400"></i>
+                        <span>Total: <strong id="stat-total" class="text-white font-bold ml-0.5">0</strong></span>
+                    </button>
+
+                    <!-- Online Filter -->
+                    <button id="badgeFilterOnline" onclick="filterByStatus('online')" class="status-badge-btn flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-xs font-semibold text-emerald-400 shadow-sm backdrop-blur-sm cursor-pointer transition-all active:scale-95" title="Klik untuk filter hanya server ONLINE">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.9)] animate-pulse"></span>
+                        <span>Online: <strong id="stat-online" class="text-emerald-300 font-bold ml-0.5">0</strong></span>
+                    </button>
+
+                    <!-- Offline Filter -->
+                    <button id="badgeFilterOffline" onclick="filterByStatus('offline')" class="status-badge-btn flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-xs font-semibold text-rose-400 shadow-sm backdrop-blur-sm cursor-pointer transition-all active:scale-95" title="Klik untuk filter hanya server OFFLINE (Troubleshooting)">
+                        <span class="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.9)]"></span>
+                        <span>Offline: <strong id="stat-offline" class="text-rose-300 font-bold ml-0.5">0</strong></span>
+                    </button>
+
+                    <!-- Manual Refresh Button -->
+                    <button id="btnRefreshStatus" onclick="manualRefreshStatus()" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/80 text-xs font-semibold text-slate-300 hover:text-sky-400 shadow-sm backdrop-blur-sm cursor-pointer transition-all active:scale-95 ml-1" title="Ping & Cek Ulang Semua Layanan Sekarang">
+                        <i id="refreshIcon" class="fa-solid fa-arrows-rotate text-sky-400"></i>
+                        <span class="hidden md:inline">Cek Ulang</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Active Status Filter Banner (Troubleshooting Notification) -->
+            <div id="statusFilterAlert" class="hidden mb-3 p-2.5 px-4 rounded-xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-between text-xs text-sky-300 animate-fade-in">
+                <span class="flex items-center gap-2">
+                    <i class="fa-solid fa-filter text-sky-400"></i>
+                    <span id="statusFilterAlertText">Menyaring layanan...</span>
+                </span>
+                <button onclick="filterByStatus('all')" class="text-xs bg-sky-500 hover:bg-sky-600 text-white px-2.5 py-1 rounded-lg font-medium transition-colors">
+                    Reset Filter Status
+                </button>
+            </div>
+
+            <div class="cat-nav-wrapper bg-slate-900/60 backdrop-blur-md p-2 rounded-2xl border border-slate-700/60 shadow-lg">
+                <div id="categoryNav" class="flex items-center gap-2.5 overflow-x-auto pb-1 custom-scrollbar">
+                    <!-- Tabs kategori di-render dinamis via JS -->
+                </div>
+            </div>
+        </div>
+
         <!-- Container untuk List Kategori -->
         <main id="catalog-container"></main>
 
         <!-- Footer -->
         <footer class="mt-16 mb-8 text-center text-slate-400 border-t border-slate-700/50 pt-8 pb-4">
-            <p class="text-sm font-medium tracking-wide">
-                Katalog Layanan IT & Web<br>
-                <span class="text-xs mt-2 block opacity-75">
-                    Dibuat & Dikembangkan oleh <span class="text-sky-400 font-bold">Adiningtyas Yuli Purwanto, S.Kom</span>
-                </span>
-            </p>
+            <div class="max-w-2xl mx-auto space-y-2.5">
+                <p class="text-sm font-medium tracking-wide text-slate-300">
+                    Katalog Layanan IT & Web
+                </p>
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-800/80 border border-slate-700/80 text-xs text-slate-300 shadow-sm backdrop-blur-sm">
+                        <i class="fa-solid fa-building text-sky-400 text-xs"></i>
+                        <span><strong class="text-sky-400 font-semibold">Khanza.NET LocalDash</strong> is a member of <strong class="text-slate-100 font-semibold">PT. Khanza Digital Nusantara</strong></span>
+                    </div>
+                </div>
+            </div>
         </footer>
     </div>
 </div>
@@ -250,9 +653,19 @@
                 <input type="url" id="formUrl" required placeholder="http://192.168..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-white">
             </div>
             <div class="mb-4">
+                <label class="block text-sm font-medium text-slate-300 mb-1">Keterangan / Tag Node <span class="text-xs text-slate-500 font-normal">(Opsional)</span></label>
+                <input type="text" id="formDesc" placeholder="Misal: Port 8006 • Node 101 / Server Utama" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-white text-sm">
+            </div>
+            <div class="mb-4">
                 <label class="block text-sm font-medium text-slate-300 mb-1">Kategori</label>
                 <input type="text" id="formCategory" list="categoryList" required placeholder="Pilih / Ketik Kategori..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-white">
                 <datalist id="categoryList"></datalist>
+            </div>
+            <div class="mb-4">
+                <label class="flex items-center gap-2.5 cursor-pointer text-sm text-slate-300 select-none">
+                    <input type="checkbox" id="formPinned" class="w-4 h-4 rounded text-sky-500 bg-slate-900 border-slate-700 focus:ring-sky-500">
+                    <span class="flex items-center gap-1.5 font-medium"><i class="fa-solid fa-star text-amber-400"></i> Sematkan ke Layanan Favorit</span>
+                </label>
             </div>
             <div class="mb-6">
                 <label class="block text-sm font-medium text-slate-300 mb-2">Pilih Ikon Layanan</label>
@@ -272,7 +685,7 @@
 <!-- Modal Settings -->
 <div id="settingsModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center">
     <div class="bg-slate-800 rounded-xl p-8 w-full max-w-md border border-slate-700 shadow-2xl">
-        <h3 class="text-xl font-bold mb-6"><i class="fa-solid fa-paint-roller text-sky-400 mr-2"></i> Personalisasi Tampilan</h3>
+        <h3 class="text-xl font-bold mb-6"><i class="fa-solid fa-paint-roller text-sky-400 mr-2"></i> Pengaturan & Personalisasi</h3>
         <form onsubmit="saveSettings(event)">
             <div class="mb-4">
                 <label class="block text-sm font-medium text-slate-300 mb-1">URL Gambar Background (Web)</label>
@@ -284,21 +697,40 @@
                 ATAU
             </div>
 
-            <div class="mb-6">
+            <div class="mb-5">
                 <label class="block text-sm font-medium text-slate-300 mb-1">Upload Gambar dari Komputer</label>
                 <input type="file" id="formBgFile" accept="image/*" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-sky-50 file:text-sky-700 hover:file:bg-sky-100">
                 <p class="text-xs text-slate-500 mt-1">Maksimal 5MB. Upload akan otomatis menimpa URL.</p>
             </div>
+
+            <hr class="border-slate-700 my-5">
+            <h4 class="font-bold text-white mb-3 text-sm flex items-center gap-2">
+                <i class="fa-solid fa-bell text-amber-400"></i> Notifikasi & Audio
+            </h4>
+            <div class="mb-5 bg-slate-900/70 p-3 rounded-lg border border-slate-700/80">
+                <label class="flex items-center justify-between cursor-pointer">
+                    <span class="text-xs text-slate-300 font-medium">
+                        Peringatan Suara Server Down
+                        <span class="block text-[11px] text-slate-500 font-normal">Bunyikan nada alert jika ada server online yang tiba-tiba offline</span>
+                    </span>
+                    <input type="checkbox" id="settingSoundAlert" onchange="toggleSoundAlertPref(this.checked)" class="w-4 h-4 ml-3 rounded text-sky-500 bg-slate-800 border-slate-600 focus:ring-sky-500">
+                </label>
+            </div>
             
-            <hr class="border-slate-700 my-6">
-            <h4 class="font-bold text-white mb-4"><i class="fa-solid fa-database text-sky-500 mr-2"></i> Manajemen Data</h4>
-            <div class="flex flex-col gap-4 mb-6">
-                <button type="button" onclick="downloadBackup()" class="w-full py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg flex items-center justify-center gap-2 transition-colors">
-                    <i class="fa-solid fa-download"></i> Download Backup Data
+            <hr class="border-slate-700 my-5">
+            <h4 class="font-bold text-white mb-3 text-sm flex items-center gap-2">
+                <i class="fa-solid fa-database text-sky-500"></i> Manajemen Data
+            </h4>
+            <div class="flex flex-col gap-2.5 mb-6">
+                <button type="button" onclick="exportBookmarksHtml()" class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg flex items-center justify-center gap-2 transition-colors text-xs font-semibold shadow-sm">
+                    <i class="fa-solid fa-bookmark text-emerald-200"></i> Ekspor ke Bookmark Browser (.html)
+                </button>
+                <button type="button" onclick="downloadBackup()" class="w-full py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg flex items-center justify-center gap-2 transition-colors text-xs font-semibold shadow-sm">
+                    <i class="fa-solid fa-download"></i> Download Backup Data (.json)
                 </button>
                 <div class="relative">
                     <input type="file" id="formRestoreFile" accept=".json" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="restoreBackup(this)">
-                    <button type="button" class="w-full py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg flex items-center justify-center gap-2 transition-colors">
+                    <button type="button" class="w-full py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg flex items-center justify-center gap-2 transition-colors text-xs font-semibold">
                         <i class="fa-solid fa-upload"></i> Restore dari File Backup
                     </button>
                 </div>
@@ -309,6 +741,43 @@
                 <button type="submit" class="px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg">Simpan</button>
             </div>
         </form>
+    </div>
+</div>
+
+<!-- Modal Catatan Jaringan (Network Scratchpad) -->
+<div id="notesModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-slate-800 rounded-xl p-6 md:p-8 w-full max-w-2xl border border-slate-700 shadow-2xl flex flex-col max-h-[90vh]">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-700 mb-4">
+            <h3 class="text-xl font-bold flex items-center gap-2.5 text-sky-400">
+                <i class="fa-solid fa-clipboard-list"></i> Papan Catatan Jaringan & IP Subnet
+            </h3>
+            <button onclick="closeModal('notesModal')" class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-700 transition-colors">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+        
+        <div class="mb-3.5 p-3 rounded-lg bg-sky-500/10 border border-sky-500/30 flex items-start gap-2.5 text-xs text-sky-200">
+            <i class="fa-solid fa-circle-info text-sky-400 mt-0.5 flex-shrink-0 text-sm"></i>
+            <div class="leading-relaxed">
+                Catatan teknis internal (IP Gateway, DNS Server, VLAN, alokasi port, atau topologi). Hanya Administrator yang dapat menyimpan perubahan.
+            </div>
+        </div>
+        
+        <div class="flex-grow flex flex-col mb-4">
+            <textarea id="networkNotesText" placeholder="Contoh format catatan jaringan:&#10;• Router Gateway: 192.168.1.1 (MikroTik / OpenWrt)&#10;• DNS Primer: 1.1.1.1 | DNS Sekunder: 8.8.8.8&#10;• Proxmox VE Host: 192.168.1.100 (Port 8006)&#10;• Range DHCP Client: 192.168.1.100 - 192.168.1.250&#10;• Range Static Server: 192.168.1.2 - 192.168.1.99&#10;• VLAN ID: 10 (Management), 20 (Layanan), 30 (IoT)" class="w-full flex-grow h-64 bg-black/60 border border-slate-600 rounded-xl p-4 text-sm font-mono text-slate-100 placeholder:text-slate-400 focus:outline-none focus:border-sky-400 custom-scrollbar resize-y leading-relaxed shadow-inner"></textarea>
+        </div>
+        
+        <div class="flex justify-between items-center gap-3 pt-3 border-t border-slate-700/60">
+            <button type="button" onclick="copyNetworkNotes()" class="px-4 py-2 bg-slate-750 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-600 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer shadow-sm">
+                <i class="fa-solid fa-copy text-sky-400"></i> Salin Catatan
+            </button>
+            <div class="flex gap-2.5">
+                <button type="button" onclick="closeModal('notesModal')" class="px-4 py-2 bg-slate-750 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-600 rounded-lg text-xs font-semibold transition-all cursor-pointer">Tutup</button>
+                <button type="button" onclick="saveNetworkNotes()" class="admin-only px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer shadow-lg shadow-sky-500/25">
+                    <i class="fa-solid fa-floppy-disk"></i> Simpan Catatan
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -433,13 +902,20 @@
         }
     }
 
-    // --- FUNGSI SETTINGS ---
+    // --- FUNGSI SETTINGS & NOTIFIKASI ---
+    let soundAlertEnabled = localStorage.getItem('localdash_sound_alert') === 'true';
+
     async function loadSettings() {
         const savedTheme = localStorage.getItem('localdash_theme');
         if (savedTheme === 'light') {
             document.body.classList.add('light-mode');
             const icon = document.getElementById('theme-icon');
-            if (icon) icon.className = 'fa-solid fa-sun';
+            if (icon) icon.className = 'fa-solid fa-sun text-amber-500';
+        }
+
+        const soundAlertEl = document.getElementById('settingSoundAlert');
+        if (soundAlertEl) {
+            soundAlertEl.checked = (localStorage.getItem('localdash_sound_alert') === 'true');
         }
         
         const res = await fetch('/api/settings');
@@ -450,6 +926,129 @@
         } else {
             document.body.style.backgroundImage = 'none';
         }
+    }
+
+    function toggleSoundAlertPref(enabled) {
+        soundAlertEnabled = enabled;
+        localStorage.setItem('localdash_sound_alert', enabled ? 'true' : 'false');
+        if (enabled) {
+            showToast('Peringatan suara server down diaktifkan 🔔', 'info');
+            playDownAlertSound('Test Alert');
+        } else {
+            showToast('Peringatan suara server down dinonaktifkan', 'info');
+        }
+    }
+
+    // Peringatan Suara Server Down menggunakan Web Audio API (tanpa file mp3 eksternal)
+    function playDownAlertSound(serviceName) {
+        if (!soundAlertEnabled) return;
+        try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (!AudioCtx) return;
+            const ctx = new AudioCtx();
+            const now = ctx.currentTime;
+
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+
+            osc.type = 'sawtooth';
+            // Nada peringatan dua frekuensi (peringatan turun)
+            osc.frequency.setValueAtTime(520, now);
+            osc.frequency.setValueAtTime(260, now + 0.18);
+
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+
+            osc.start(now);
+            osc.stop(now + 0.45);
+        } catch (e) {
+            console.error('Audio alert error:', e);
+        }
+    }
+
+    // Toast Notification System
+    function showToast(message, type = 'info') {
+        const container = document.getElementById('toastContainer');
+        if (!container) return;
+
+        const toast = document.createElement('div');
+        const bgMap = {
+            success: 'bg-emerald-600/95 border-emerald-400 text-white shadow-emerald-500/20',
+            error: 'bg-rose-600/95 border-rose-400 text-white shadow-rose-500/20',
+            warning: 'bg-amber-600/95 border-amber-300 text-white shadow-amber-500/20',
+            info: 'bg-slate-900/95 border-sky-500/50 text-white shadow-sky-500/20'
+        };
+        const iconMap = {
+            success: 'fa-circle-check text-emerald-200',
+            error: 'fa-circle-exclamation text-rose-200',
+            warning: 'fa-triangle-exclamation text-amber-200',
+            info: 'fa-circle-info text-sky-300'
+        };
+
+        const cls = bgMap[type] || bgMap.info;
+        const ic = iconMap[type] || iconMap.info;
+
+        toast.className = `flex items-center gap-2.5 px-4 py-3 rounded-xl border shadow-xl backdrop-blur-md text-xs font-medium transition-all duration-300 transform translate-y-3 opacity-0 pointer-events-auto ${cls}`;
+        toast.innerHTML = `<i class="fa-solid ${ic} text-sm"></i><span class="flex-1">${message}</span>`;
+
+        container.appendChild(toast);
+
+        requestAnimationFrame(() => {
+            toast.classList.remove('translate-y-3', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+        });
+
+        setTimeout(() => {
+            toast.classList.remove('translate-y-0', 'opacity-100');
+            toast.classList.add('translate-y-3', 'opacity-0');
+            setTimeout(() => toast.remove(), 300);
+        }, 3200);
+    }
+
+    // Quick Copy IP / URL
+    function copyToClipboard(text, btnEl, event) {
+        if (event) {
+            event.stopPropagation();
+            event.preventDefault();
+        }
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text).then(() => {
+                showCopySuccess(btnEl);
+            }).catch(() => fallbackCopy(text, btnEl));
+        } else {
+            fallbackCopy(text, btnEl);
+        }
+    }
+
+    function showCopySuccess(btnEl) {
+        if (btnEl) {
+            const icon = btnEl.querySelector('i');
+            if (icon) {
+                const origClass = icon.className;
+                icon.className = 'fa-solid fa-check text-emerald-400';
+                setTimeout(() => { icon.className = origClass; }, 1500);
+            }
+        }
+        showToast('URL/IP berhasil disalin ke clipboard! 📋', 'success');
+    }
+
+    function fallbackCopy(text, btnEl) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        try {
+            document.execCommand('copy');
+            showCopySuccess(btnEl);
+        } catch (err) {
+            showToast('Gagal menyalin URL', 'error');
+        }
+        ta.remove();
     }
 
     async function saveSettings(e) {
@@ -478,84 +1077,595 @@
         closeModal('settingsModal');
     }
 
-    // Load Data
+    // State Aplikasi
+    let cachedLinks = [];
+    let activeCategory = localStorage.getItem('localdash_active_category') || 'all';
+    let statusFilter = 'all'; // 'all' | 'online' | 'offline'
+    let favoriteIds = JSON.parse(localStorage.getItem('localdash_favorites') || '[]');
+    const serviceStatuses = {}; // Map: link.id -> { status: 'online'|'offline', ms: number }
+    const previousServiceStatuses = {}; // Map: link.id -> 'online' | 'offline' (untuk alert down)
+
+    // Helper Layanan Favorit
+    function isFavorite(item) {
+        if (!item) return false;
+        return item.pinned === true || favoriteIds.includes(item.id);
+    }
+
+    function toggleFavorite(id, event) {
+        if (event) {
+            event.stopPropagation();
+            event.preventDefault();
+        }
+        const item = cachedLinks.find(l => l.id === id);
+        const currentlyFav = isFavorite(item);
+        
+        if (currentlyFav) {
+            favoriteIds = favoriteIds.filter(favId => favId !== id);
+            if (item && item.pinned) {
+                item.pinned = false;
+                if (token) {
+                    apiFetch(`/api/links/${id}`, {
+                        method: 'PUT',
+                        body: JSON.stringify({ ...item, pinned: false })
+                    });
+                }
+            }
+            showToast(`"${item ? item.name : 'Layanan'}" dihapus dari Favorit`, 'info');
+        } else {
+            if (!favoriteIds.includes(id)) favoriteIds.push(id);
+            if (item && token) {
+                item.pinned = true;
+                apiFetch(`/api/links/${id}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ ...item, pinned: true })
+                });
+            }
+            showToast(`"${item ? item.name : 'Layanan'}" disematkan ke Favorit ⭐`, 'success');
+        }
+        localStorage.setItem('localdash_favorites', JSON.stringify(favoriteIds));
+        renderCategoryNav(cachedLinks);
+        renderCatalog(cachedLinks);
+    }
+
+    // Filter Berdasarkan Status (All, Online, Offline)
+    function filterByStatus(status) {
+        statusFilter = status;
+        
+        const btnAll = document.getElementById('badgeFilterAll');
+        const btnOnline = document.getElementById('badgeFilterOnline');
+        const btnOffline = document.getElementById('badgeFilterOffline');
+        
+        [btnAll, btnOnline, btnOffline].forEach(b => {
+            if (b) b.classList.remove('ring-2', 'ring-sky-400', 'ring-emerald-400', 'ring-rose-400', 'bg-slate-700');
+        });
+
+        const alertBanner = document.getElementById('statusFilterAlert');
+        const alertText = document.getElementById('statusFilterAlertText');
+
+        if (status === 'online') {
+            if (btnOnline) btnOnline.classList.add('ring-2', 'ring-emerald-400');
+            if (alertBanner) alertBanner.classList.remove('hidden');
+            if (alertText) alertText.innerHTML = `<span>Menyaring tampilan: <strong>Hanya Layanan ONLINE</strong></span>`;
+        } else if (status === 'offline') {
+            if (btnOffline) btnOffline.classList.add('ring-2', 'ring-rose-400');
+            if (alertBanner) alertBanner.classList.remove('hidden');
+            if (alertText) alertText.innerHTML = `<span>Troubleshooting Mode: <strong>Hanya Layanan OFFLINE</strong></span>`;
+        } else {
+            if (btnAll) btnAll.classList.add('ring-2', 'ring-sky-400');
+            if (alertBanner) alertBanner.classList.add('hidden');
+        }
+
+        renderCatalog(cachedLinks);
+    }
+
+    // Refresh Manual Ping Status
+    async function manualRefreshStatus() {
+        const icon = document.getElementById('refreshIcon');
+        if (icon) icon.classList.add('fa-spin');
+        showToast('Memeriksa status semua layanan server...', 'info');
+        await checkAllServiceStatuses();
+        if (icon) icon.classList.remove('fa-spin');
+        showToast('Status semua server berhasil diperbarui!', 'success');
+    }
+
+    function updateStatusSummary() {
+        const total = cachedLinks.length;
+        let onlineCount = 0;
+        let offlineCount = 0;
+
+        cachedLinks.forEach(l => {
+            const st = serviceStatuses[l.id];
+            if (st && st.status === 'online') onlineCount++;
+            else if (st && st.status === 'offline') offlineCount++;
+        });
+
+        const totalEl = document.getElementById('stat-total');
+        const onlineEl = document.getElementById('stat-online');
+        const offlineEl = document.getElementById('stat-offline');
+
+        if (totalEl) totalEl.innerText = total;
+        if (onlineEl) onlineEl.innerText = onlineCount;
+        if (offlineEl) offlineEl.innerText = offlineCount;
+    }
+
+    // --- UPTIME & STABILITY TRACKING ---
+    const serviceUptimeHistory = JSON.parse(localStorage.getItem('localdash_uptime_history') || '{}');
+
+    function recordUptimeSample(linkId, isOnline) {
+        if (!serviceUptimeHistory[linkId]) {
+            serviceUptimeHistory[linkId] = [];
+        }
+        serviceUptimeHistory[linkId].push(isOnline);
+        if (serviceUptimeHistory[linkId].length > 5) {
+            serviceUptimeHistory[linkId].shift(); // simpan 5 sampel terakhir
+        }
+        try {
+            localStorage.setItem('localdash_uptime_history', JSON.stringify(serviceUptimeHistory));
+        } catch(e) {}
+    }
+
+    function getUptimePercent(linkId) {
+        const hist = serviceUptimeHistory[linkId];
+        if (!hist || hist.length === 0) return 100;
+        const upCount = hist.filter(Boolean).length;
+        return Math.round((upCount / hist.length) * 100);
+    }
+
+    function renderUptimeBars(linkId) {
+        const hist = serviceUptimeHistory[linkId] || [];
+        let barsHtml = '';
+        for (let i = 0; i < 5; i++) {
+            const val = hist[i];
+            let colorClass = 'bg-slate-700/80';
+            let barTitle = 'Menunggu data ping';
+            if (val === true) {
+                colorClass = 'bg-emerald-400 shadow-[0_0_4px_rgba(52,211,153,0.6)]';
+                barTitle = 'Online';
+            } else if (val === false) {
+                colorClass = 'bg-rose-500 shadow-[0_0_4px_rgba(244,63,94,0.6)]';
+                barTitle = 'Offline';
+            }
+            barsHtml += `<span class="w-1.5 h-2.5 rounded-sm ${colorClass} inline-block transition-colors" title="${barTitle}"></span>`;
+        }
+        const percent = getUptimePercent(linkId);
+        return `
+            <div class="flex items-center gap-1.5" title="Kestabilan Uptime (5 ping terakhir): ${percent}%">
+                <div class="flex items-center gap-0.5">${barsHtml}</div>
+                <span class="text-[10px] font-mono text-slate-400 font-semibold">${percent}%</span>
+            </div>
+        `;
+    }
+
+    async function checkAllServiceStatuses() {
+        if (!cachedLinks || cachedLinks.length === 0) return;
+        updateStatusSummary();
+
+        await Promise.all(cachedLinks.map(async (link) => {
+            try {
+                const res = await fetch(`/api/status?url=${encodeURIComponent(link.url)}`);
+                const data = await res.json();
+                const isOnline = (data.status === 'online');
+                
+                // Deteksi jika server sebelumnya online lalu offline (Server Down Alert)
+                const prev = previousServiceStatuses[link.id];
+                if (prev === 'online' && !isOnline) {
+                    playDownAlertSound(link.name);
+                    showToast(`⚠️ PERINGATAN: Layanan "${link.name}" terdeteksi OFFLINE!`, 'error');
+                }
+                previousServiceStatuses[link.id] = isOnline ? 'online' : 'offline';
+                serviceStatuses[link.id] = { 
+                    status: isOnline ? 'online' : 'offline', 
+                    ms: data.ms || 0,
+                    ssl: data.ssl || null
+                };
+
+                // Catat sampel kestabilan uptime
+                recordUptimeSample(link.id, isOnline);
+
+                const card = document.querySelector(`[data-id="${link.id}"]`);
+                if (card) {
+                    const dot = card.querySelector('.status-dot');
+                    const text = card.querySelector('.status-text');
+                    const uptimeEl = card.querySelector('.uptime-container');
+                    
+                    if (uptimeEl) {
+                        uptimeEl.innerHTML = renderUptimeBars(link.id);
+                    }
+
+                    if (isOnline) {
+                        if (dot) {
+                            dot.className = 'w-3 h-3 rounded-full status-dot bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)] animate-pulse';
+                            dot.title = `Online (${data.ms}ms)`;
+                        }
+                        if (text) {
+                            text.innerText = `Online (${data.ms}ms)`;
+                            text.className = 'status-text text-xs font-bold text-green-400';
+                        }
+                    } else {
+                        if (dot) {
+                            dot.className = 'w-3 h-3 rounded-full status-dot bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]';
+                            dot.title = 'Offline';
+                        }
+                        if (text) {
+                            text.innerText = 'Offline';
+                            text.className = 'status-text text-xs font-bold text-red-500';
+                        }
+                    }
+
+                    // Tampilkan SSL Badge jika ada data SSL dan belum ter-render
+                    if (data.ssl && !card.querySelector('.ssl-badge-container')) {
+                        const tagWrapper = card.querySelector('.tag-wrapper');
+                        if (tagWrapper) {
+                            const ssl = data.ssl;
+                            const badgeHtml = (ssl.daysRemaining <= 14)
+                                ? `<span class="ssl-badge-container inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-mono animate-pulse" title="Sertifikat SSL kedaluwarsa dalam ${ssl.daysRemaining} hari! Issuer: ${ssl.issuer}"><i class="fa-solid fa-triangle-exclamation text-amber-400"></i> SSL: ${ssl.daysRemaining} hari</span>`
+                                : `<span class="ssl-badge-container inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-mono" title="SSL Aktif (${ssl.daysRemaining} hari tersisa). Issuer: ${ssl.issuer}"><i class="fa-solid fa-lock text-[9px]"></i> SSL: ${ssl.daysRemaining}h</span>`;
+                            tagWrapper.insertAdjacentHTML('beforeend', badgeHtml);
+                        }
+                    }
+                }
+            } catch (e) {
+                const prev = previousServiceStatuses[link.id];
+                if (prev === 'online') {
+                    playDownAlertSound(link.name);
+                    showToast(`⚠️ PERINGATAN: Layanan "${link.name}" terdeteksi OFFLINE!`, 'error');
+                }
+                previousServiceStatuses[link.id] = 'offline';
+                serviceStatuses[link.id] = { status: 'offline', ms: 0, ssl: null };
+                recordUptimeSample(link.id, false);
+
+                const card = document.querySelector(`[data-id="${link.id}"]`);
+                if (card) {
+                    const dot = card.querySelector('.status-dot');
+                    const text = card.querySelector('.status-text');
+                    const uptimeEl = card.querySelector('.uptime-container');
+                    if (uptimeEl) uptimeEl.innerHTML = renderUptimeBars(link.id);
+                    if (dot) {
+                        dot.className = 'w-3 h-3 rounded-full status-dot bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]';
+                        dot.title = 'Offline';
+                    }
+                    if (text) {
+                        text.innerText = 'Offline';
+                        text.className = 'status-text text-xs font-bold text-red-500';
+                    }
+                }
+            }
+            updateStatusSummary();
+        }));
+    }
+
+    function getCategoryIcon(cat, items) {
+        if (items && items.length > 0 && items[0].icon) {
+            let ic = items[0].icon;
+            if (!ic.includes('fa-brands') && !ic.includes('fa-solid')) {
+                return `fa-solid ${ic.replace('fa-solid ', '')}`;
+            }
+            return ic;
+        }
+        const c = (cat || '').toLowerCase();
+        if (c.includes('jaringan') || c.includes('network') || c.includes('wifi') || c.includes('router')) return 'fa-solid fa-network-wired';
+        if (c.includes('stream') || c.includes('media') || c.includes('film') || c.includes('video') || c.includes('tv')) return 'fa-solid fa-film';
+        if (c.includes('storage') || c.includes('nas') || c.includes('drive')) return 'fa-solid fa-hard-drive';
+        if (c.includes('server') || c.includes('proxmox') || c.includes('host')) return 'fa-solid fa-server';
+        if (c.includes('cloud')) return 'fa-solid fa-cloud';
+        if (c.includes('dev') || c.includes('code') || c.includes('git')) return 'fa-solid fa-code';
+        if (c.includes('cctv') || c.includes('camera')) return 'fa-solid fa-camera';
+        if (c.includes('smart') || c.includes('home') || c.includes('iot')) return 'fa-solid fa-house-signal';
+        return 'fa-solid fa-folder';
+    }
+
     async function fetchLinks() {
         const res = await fetch('/api/links');
         const data = await res.json();
+        cachedLinks = data;
+        renderCategoryNav(data);
         renderCatalog(data);
+        checkAllServiceStatuses();
+    }
+
+    function renderCategoryNav(links) {
+        const nav = document.getElementById('categoryNav');
+        if (!nav) return;
+
+        // Kumpulkan grup kategori dan hitung jumlah layanan
+        const catGroups = {};
+        links.forEach(l => {
+            const cat = l.category || 'Umum';
+            if (!catGroups[cat]) catGroups[cat] = [];
+            catGroups[cat].push(l);
+        });
+
+        const categories = Object.keys(catGroups);
+        const favoriteCount = links.filter(l => isFavorite(l)).length;
+
+        // Validasi activeCategory jika tersimpan
+        if (activeCategory !== 'all' && activeCategory !== 'favorites' && !catGroups[activeCategory]) {
+            activeCategory = 'all';
+            localStorage.setItem('localdash_active_category', 'all');
+        }
+
+        let navHTML = '';
+
+        // 1. Tab "Semua"
+        const isAllActive = activeCategory === 'all';
+        const allBtnClass = isAllActive
+            ? 'active bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold shadow-lg shadow-sky-500/25 border-sky-400/50 scale-[1.02]'
+            : 'bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 hover:text-white border-slate-700/60';
+        const allBadgeClass = isAllActive
+            ? 'bg-white/20 text-white'
+            : 'bg-slate-700/60 text-slate-400';
+
+        navHTML += `
+            <button onclick="selectCategory('all')" class="cat-tab-btn flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium whitespace-nowrap cursor-pointer transition-all ${allBtnClass}" title="Tampilkan Semua Layanan">
+                <i class="fa-solid fa-border-all ${isAllActive ? 'text-white' : 'text-sky-400'}"></i>
+                <span>Semua</span>
+                <span class="cat-badge px-2 py-0.5 rounded-full text-xs font-mono ${allBadgeClass}">${links.length}</span>
+            </button>
+        `;
+
+        // 2. Tab "⭐ Favorit" (jika ada layanan favorit)
+        if (favoriteCount > 0) {
+            const isFavActive = activeCategory === 'favorites';
+            const favBtnClass = isFavActive
+                ? 'active bg-gradient-to-r from-amber-500 to-yellow-600 text-white font-semibold shadow-lg shadow-amber-500/25 border-amber-400/50 scale-[1.02]'
+                : 'bg-slate-800/80 hover:bg-slate-700/80 text-amber-300 hover:text-white border-amber-500/30';
+            const favBadgeClass = isFavActive
+                ? 'bg-white/20 text-white'
+                : 'bg-amber-500/20 text-amber-300';
+
+            navHTML += `
+                <button onclick="selectCategory('favorites')" class="cat-tab-btn flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium whitespace-nowrap cursor-pointer transition-all ${favBtnClass}" title="Tampilkan Layanan yang Disematkan / Favorit">
+                    <i class="fa-solid fa-star ${isFavActive ? 'text-white' : 'text-amber-400'}"></i>
+                    <span>Favorit</span>
+                    <span class="cat-badge px-2 py-0.5 rounded-full text-xs font-mono ${favBadgeClass}">${favoriteCount}</span>
+                </button>
+            `;
+        }
+
+        // 3. Tab Kategori Dinamis
+        categories.forEach(cat => {
+            const items = catGroups[cat];
+            const isActive = activeCategory === cat;
+            const iconClass = getCategoryIcon(cat, items);
+            const btnClass = isActive
+                ? 'active bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold shadow-lg shadow-sky-500/25 border-sky-400/50 scale-[1.02]'
+                : 'bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 hover:text-white border-slate-700/60';
+            const badgeClass = isActive
+                ? 'bg-white/20 text-white'
+                : 'bg-slate-700/60 text-slate-400';
+
+            navHTML += `
+                <button onclick="selectCategory('${cat.replace(/'/g, "\\'")}')" class="cat-tab-btn flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium whitespace-nowrap cursor-pointer transition-all ${btnClass}" title="Hanya tampilkan kategori ${cat}">
+                    <i class="${iconClass} ${isActive ? 'text-white' : 'text-slate-400'}"></i>
+                    <span>${cat}</span>
+                    <span class="cat-badge px-2 py-0.5 rounded-full text-xs font-mono ${badgeClass}">${items.length}</span>
+                </button>
+            `;
+        });
+
+        nav.innerHTML = navHTML;
+
+        // Update Keterangan Statistik
+        const statsEl = document.getElementById('categoryStats');
+        if (statsEl) {
+            if (activeCategory === 'all') {
+                statsEl.innerText = `${categories.length} Kategori • ${links.length} Layanan`;
+            } else if (activeCategory === 'favorites') {
+                statsEl.innerText = `${favoriteCount} Layanan Favorit`;
+            } else {
+                const count = catGroups[activeCategory]?.length || 0;
+                statsEl.innerText = `${count} Layanan (${activeCategory})`;
+            }
+        }
+    }
+
+    function selectCategory(cat) {
+        activeCategory = cat;
+        localStorage.setItem('localdash_active_category', cat);
+        renderCategoryNav(cachedLinks);
+        renderCatalog(cachedLinks);
     }
 
     function renderCatalog(links) {
         const container = document.getElementById('catalog-container');
         container.innerHTML = '';
         
+        // 1. Filter Kategori (All / Favorites / Spesifik)
+        let filteredLinks = links;
+        if (activeCategory === 'favorites') {
+            filteredLinks = links.filter(l => isFavorite(l));
+        } else if (activeCategory !== 'all') {
+            filteredLinks = links.filter(l => l.category === activeCategory);
+        }
+
+        // 2. Filter Status Server (All / Online / Offline)
+        if (statusFilter === 'online') {
+            filteredLinks = filteredLinks.filter(l => {
+                const st = serviceStatuses[l.id];
+                return st && st.status === 'online';
+            });
+        } else if (statusFilter === 'offline') {
+            filteredLinks = filteredLinks.filter(l => {
+                const st = serviceStatuses[l.id];
+                return st && st.status === 'offline';
+            });
+        }
+
         const categories = {};
         const uniqueCategories = new Set();
 
         links.forEach(link => {
-            if(!categories[link.category]) categories[link.category] = [];
-            categories[link.category].push(link);
             uniqueCategories.add(link.category);
         });
 
-        // Update datalist
+        filteredLinks.forEach(link => {
+            const cat = (activeCategory === 'favorites') ? 'Layanan Favorit' : link.category;
+            if(!categories[cat]) categories[cat] = [];
+            categories[cat].push(link);
+        });
+
+        // Update datalist untuk input form kategori
         const categoryListHTML = document.getElementById('categoryList');
-        categoryListHTML.innerHTML = '';
-        uniqueCategories.forEach(cat => categoryListHTML.innerHTML += `<option value="${cat}">`);
+        if (categoryListHTML) {
+            categoryListHTML.innerHTML = '';
+            uniqueCategories.forEach(cat => categoryListHTML.innerHTML += `<option value="${cat}">`);
+        }
+
+        // Tampilan jika filter kosong
+        if (filteredLinks.length === 0) {
+            let emptyMsg = 'Belum ada layanan di kategori ini';
+            let emptySub = 'Pilih kategori lain atau tambahkan link baru melalui mode Admin.';
+            if (activeCategory === 'favorites') {
+                emptyMsg = 'Belum ada layanan favorit';
+                emptySub = 'Klik ikon bintang ⭐ pada kartu layanan mana saja untuk menjadikannya favorit.';
+            } else if (statusFilter === 'online') {
+                emptyMsg = 'Tidak ada layanan yang terdeteksi ONLINE saat ini';
+                emptySub = 'Pastikan server tujuan aktif atau periksa koneksi jaringan Anda.';
+            } else if (statusFilter === 'offline') {
+                emptyMsg = 'Semua layanan terpantau ONLINE! 🎉';
+                emptySub = 'Tidak ada server yang sedang mengalami gangguan saat ini.';
+            }
+
+            container.innerHTML = `
+                <div class="text-center py-16 bg-slate-800/40 backdrop-blur-md rounded-2xl border border-dashed border-slate-700/80 p-8 my-6 animate-fade-in">
+                    <i class="fa-solid fa-folder-open text-5xl text-slate-600 mb-3 block"></i>
+                    <p class="text-lg font-semibold text-slate-300">${emptyMsg}</p>
+                    <p class="text-sm text-slate-400 mt-1">${emptySub}</p>
+                    <div class="flex justify-center gap-3 mt-4">
+                        <button onclick="filterByStatus('all'); selectCategory('all');" class="px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg text-sm font-medium transition-colors">
+                            <i class="fa-solid fa-border-all mr-2"></i> Tampilkan Semua Layanan
+                        </button>
+                    </div>
+                </div>
+            `;
+            return;
+        }
 
         for (const [category, items] of Object.entries(categories)) {
-            let catIcon = items[0]?.icon.split(' ')[0] || 'fa-solid'; 
-            let catIcon2 = items[0]?.icon.split(' ')[1] || 'fa-folder'; 
-            if(!catIcon.includes('fa-')) catIcon2 = items[0]?.icon;
-            
+            let catIcon = (category === 'Layanan Favorit') ? 'fa-solid fa-star text-amber-400' : getCategoryIcon(category, items);
             let safeCategoryId = category.replace(/\s+/g, '-').toLowerCase();
+
             let sectionHTML = `
-            <div class="mb-10">
-                <h2 class="text-2xl font-semibold mb-6 flex items-center justify-between text-slate-200 cursor-pointer group" onclick="toggleCategory('${safeCategoryId}')">
-                    <span class="flex items-center gap-2"><i class="fa-solid ${catIcon2} text-slate-400"></i> ${category}</span>
-                    <i id="chevron-${safeCategoryId}" class="fa-solid fa-chevron-down text-sm text-slate-500 group-hover:text-white cat-chevron"></i>
-                </h2>
+            <div class="mb-10 animate-fade-in" data-section-category="${category}">
+                <div class="flex items-center justify-between mb-6 pb-2 border-b border-slate-700/60">
+                    <div class="flex items-center gap-3">
+                        <span class="w-2.5 h-6 bg-sky-500 rounded-full inline-block shadow-sm shadow-sky-500/50"></span>
+                        <h2 class="text-2xl font-bold flex items-center gap-2.5 text-slate-100 cursor-pointer group" onclick="toggleCategory('${safeCategoryId}')">
+                            <i class="${catIcon} ${category === 'Layanan Favorit' ? '' : 'text-sky-400'}"></i>
+                            <span>${category}</span>
+                        </h2>
+                        <span class="text-xs bg-slate-800 text-slate-400 px-2.5 py-1 rounded-full font-medium border border-slate-700">${items.length} layanan</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        ${activeCategory !== 'all' ? `
+                            <button onclick="selectCategory('all')" class="text-xs text-sky-400 hover:text-sky-300 bg-sky-500/10 hover:bg-sky-500/20 px-3 py-1.5 rounded-lg border border-sky-500/30 transition-all flex items-center gap-1.5 cursor-pointer font-medium" title="Kembali ke tampilan semua kategori">
+                                <i class="fa-solid fa-arrow-left"></i> Semua Kategori
+                            </button>
+                        ` : `
+                            <i id="chevron-${safeCategoryId}" class="fa-solid fa-chevron-down text-sm text-slate-400 hover:text-white cat-chevron cursor-pointer p-2" onclick="toggleCategory('${safeCategoryId}')" title="Sembunyikan/Buka"></i>
+                        `}
+                    </div>
+                </div>
                 <div id="grid-${safeCategoryId}" class="cat-collapse sortable-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" data-category="${category}">
             `;
 
             items.forEach(item => {
-                let iconClass = item.icon;
+                let iconClass = item.icon || 'fa-solid fa-server';
                 if (!iconClass.includes('fa-brands') && !iconClass.includes('fa-solid')) {
                     iconClass = `fa-solid ${iconClass.replace('fa-solid ', '')}`;
                 }
-                
-                sectionHTML += `
-                <div class="glass-card rounded-xl p-6 flex flex-col items-start group relative" data-id="${item.id}">
-                    
-                    <!-- Bottom Right Controls -->
-                    <div class="absolute bottom-6 right-6 z-20 flex items-center gap-2">
-                        <!-- Admin Controls -->
-                        <div class="admin-card-controls gap-1 bg-slate-900/90 p-1 rounded-lg items-center border border-slate-700 shadow-lg backdrop-blur-sm">
-                            <button onclick="editLink(${item.id}, '${item.name.replace(/'/g, "\\'")}', '${item.url}', '${item.category}', '${item.icon}')" class="text-slate-300 hover:text-blue-500 transition-colors p-1.5"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="deleteLink(${item.id})" class="text-slate-300 hover:text-red-500 transition-colors p-1.5"><i class="fa-solid fa-trash"></i></button>
-                            <div class="cursor-move text-slate-400 hover:text-white p-1.5 drag-handle"><i class="fa-solid fa-arrows-up-down-left-right"></i></div>
-                        </div>
 
-                        <!-- Quick View Button (All Users) -->
-                        <button onclick="openQuickView('${item.name.replace(/'/g, "\\'")}', '${item.url}')" class="text-slate-300 hover:text-sky-400 bg-slate-900/90 hover:bg-slate-800 p-2.5 rounded-lg border border-slate-700 shadow-lg transition-colors backdrop-blur-sm" title="Quick View (Pratinjau)">
-                            <i class="fa-solid fa-eye"></i>
+                const currentSt = serviceStatuses[item.id];
+                let initialDotClass = 'status-dot status-checking';
+                let initialText = 'Checking...';
+                let initialTextClass = 'status-text text-xs text-slate-500';
+                if (currentSt && currentSt.status === 'online') {
+                    initialDotClass = 'w-3 h-3 rounded-full status-dot bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)] animate-pulse';
+                    initialText = `Online (${currentSt.ms || 0}ms)`;
+                    initialTextClass = 'status-text text-xs font-bold text-green-400';
+                } else if (currentSt && currentSt.status === 'offline') {
+                    initialDotClass = 'w-3 h-3 rounded-full status-dot bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]';
+                    initialText = 'Offline';
+                    initialTextClass = 'status-text text-xs font-bold text-red-500';
+                }
+
+                const itemIsFav = isFavorite(item);
+                const safeName = (item.name || '').replace(/'/g, "\\'");
+                const safeDesc = (item.description || '').replace(/'/g, "\\'");
+                const safeUrl = (item.url || '').replace(/'/g, "\\'");
+                const safeCategory = (item.category || '').replace(/'/g, "\\'");
+
+                let sslBadgeHtml = '';
+                if (currentSt && currentSt.ssl) {
+                    const ssl = currentSt.ssl;
+                    if (ssl.daysRemaining <= 14) {
+                        sslBadgeHtml = `<span class="ssl-badge-container inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-mono animate-pulse" title="Sertifikat SSL kedaluwarsa dalam ${ssl.daysRemaining} hari! Issuer: ${ssl.issuer}"><i class="fa-solid fa-triangle-exclamation text-amber-400"></i> SSL: ${ssl.daysRemaining} hari</span>`;
+                    } else {
+                        sslBadgeHtml = `<span class="ssl-badge-container inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-mono" title="SSL Aktif (${ssl.daysRemaining} hari tersisa). Issuer: ${ssl.issuer}"><i class="fa-solid fa-lock text-[9px]"></i> SSL: ${ssl.daysRemaining}h</span>`;
+                    }
+                }
+
+                sectionHTML += `
+                <div class="glass-card rounded-xl p-5 flex flex-col items-start group relative" data-id="${item.id}">
+                    
+                    <!-- Top Actions: Star Favorite Button -->
+                    <div class="absolute top-4 right-4 z-20 flex items-center gap-1.5">
+                        <button onclick="toggleFavorite(${item.id}, event)" class="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-slate-800/80 transition-all cursor-pointer ${itemIsFav ? 'text-amber-400' : ''}" title="${itemIsFav ? 'Hapus dari Favorit' : 'Sematkan ke Favorit'}">
+                            <i class="${itemIsFav ? 'fa-solid text-amber-400' : 'fa-regular'} fa-star text-base transition-transform active:scale-125"></i>
                         </button>
                     </div>
 
-                    <a href="${item.url}" target="_blank" class="w-full h-full flex flex-col relative">
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="bg-${item.color}-500/20 p-3 rounded-lg text-${item.color}-400 group-hover:bg-${item.color}-500 group-hover:text-white transition-colors">
+                    <!-- Bottom Right Controls -->
+                    <div class="absolute bottom-4 right-4 z-20 flex items-center gap-1.5">
+                        <!-- Admin Controls -->
+                        <div class="admin-card-controls gap-1 bg-slate-900/90 p-1 rounded-lg items-center border border-slate-700 shadow-lg backdrop-blur-sm">
+                            <button onclick="editLink(${item.id}, '${safeName}', '${safeUrl}', '${safeCategory}', '${item.icon}', '${safeDesc}', ${item.pinned ? 'true' : 'false'})" class="text-slate-300 hover:text-blue-500 transition-colors p-1.5" title="Edit Layanan"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteLink(${item.id})" class="text-slate-300 hover:text-red-500 transition-colors p-1.5" title="Hapus Layanan"><i class="fa-solid fa-trash"></i></button>
+                            <div class="cursor-move text-slate-400 hover:text-white p-1.5 drag-handle" title="Geser Urutan"><i class="fa-solid fa-arrows-up-down-left-right"></i></div>
+                        </div>
+
+                        <!-- Quick View Button (All Users) -->
+                        <button onclick="openQuickView('${safeName}', '${safeUrl}')" class="text-slate-300 hover:text-sky-400 bg-slate-900/90 hover:bg-slate-800 p-2 rounded-lg border border-slate-700 shadow-lg transition-colors backdrop-blur-sm" title="Quick View (Pratinjau)">
+                            <i class="fa-solid fa-eye text-sm"></i>
+                        </button>
+                    </div>
+
+                    <a href="${item.url}" target="_blank" class="w-full h-full flex flex-col relative pr-6">
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="bg-${item.color || 'sky'}-500/20 p-3 rounded-lg text-${item.color || 'sky'}-400 group-hover:bg-${item.color || 'sky'}-500 group-hover:text-white transition-colors">
                                 <i class="${iconClass} text-2xl"></i>
                             </div>
-                            <!-- Status Dot -->
-                            <div class="flex items-center gap-2">
-                                <span class="status-text text-xs text-slate-500">Checking...</span>
-                                <div class="status-dot status-checking" id="status-${item.id}" title="Memeriksa status..."></div>
+                            <!-- Status Dot & Uptime Mini Bars -->
+                            <div class="flex flex-col items-end gap-1.5 pr-2">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="${initialTextClass}">${initialText}</span>
+                                    <div class="${initialDotClass}" id="status-${item.id}" title="${initialText}"></div>
+                                </div>
+                                <div class="uptime-container">
+                                    ${renderUptimeBars(item.id)}
+                                </div>
                             </div>
                         </div>
-                        <h3 class="text-xl font-bold mb-1">${item.name}</h3>
-                        <div class="bg-slate-800/80 px-3 py-2 mt-auto rounded-lg text-xs font-mono text-slate-300 w-full truncate pr-20 md:pr-24">
-                            ${item.url}
+
+                        <h3 class="text-lg font-bold text-slate-100 group-hover:text-sky-400 transition-colors line-clamp-1">${item.name}</h3>
+                        
+                        <!-- Tag Wrapper: Keterangan / Tag Node Chip & SSL Badge -->
+                        <div class="tag-wrapper flex items-center gap-1.5 flex-wrap mt-1 mb-2">
+                            ${item.description ? `
+                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-sky-500/10 border border-sky-500/20 text-sky-300 text-[11px] font-mono font-medium max-w-full truncate" title="${item.description}">
+                                    <i class="fa-solid fa-tag text-[10px] text-sky-400 flex-shrink-0"></i>
+                                    <span class="truncate">${item.description}</span>
+                                </span>
+                            ` : ''}
+                            ${sslBadgeHtml}
+                        </div>
+
+                        <!-- URL Box with Copy Button -->
+                        <div class="flex items-center justify-between bg-slate-800/80 px-2.5 py-1.5 mt-auto rounded-lg text-xs font-mono text-slate-300 w-full border border-slate-700/60 pr-16 md:pr-20">
+                            <span class="truncate flex-1 pr-1.5">${item.url}</span>
+                            <button onclick="copyToClipboard('${safeUrl}', this, event)" class="text-slate-400 hover:text-white hover:bg-slate-700 p-1 rounded transition-colors flex-shrink-0 cursor-pointer" title="Salin URL/IP ke Clipboard">
+                                <i class="fa-regular fa-copy text-xs"></i>
+                            </button>
                         </div>
                     </a>
                 </div>
@@ -565,54 +1675,15 @@
             container.innerHTML += sectionHTML;
         }
 
-        // Jalankan Health Check
-        links.forEach(link => {
-            const card = container.querySelector(`[data-id="${link.id}"]`);
-            if(card) fetchStatus(link.url, card);
-        });
+        updateStatusSummary();
 
         // Set Realtime Auto-Update Status (Setiap 10 Detik)
         if (window.statusInterval) clearInterval(window.statusInterval);
         window.statusInterval = setInterval(() => {
-            links.forEach(link => {
-                const card = container.querySelector(`[data-id="${link.id}"]`);
-                if(card) fetchStatus(link.url, card);
-            });
-        }, 10000); // 10000ms = 10 detik
+            checkAllServiceStatuses();
+        }, 10000);
 
         if(token) initDragAndDrop();
-    }
-
-    // --- FUNGSI HEALTH CHECK ---
-    async function fetchStatus(url, card) {
-        const dot = card.querySelector('.status-dot');
-        const text = card.querySelector('.status-text');
-        try {
-            const res = await fetch(`/api/status?url=${encodeURIComponent(url)}`);
-            const data = await res.json();
-            if (data.status === 'online') {
-                dot.className = 'w-3 h-3 rounded-full status-dot bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)] animate-pulse';
-                if(text) {
-                    text.innerText = `Online (${data.ms}ms)`;
-                    text.className = 'status-text text-xs font-bold text-green-400';
-                }
-                dot.title = `Online (${data.ms}ms)`;
-            } else {
-                dot.className = 'w-3 h-3 rounded-full status-dot bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]';
-                if(text) {
-                    text.innerText = 'Offline';
-                    text.className = 'status-text text-xs font-bold text-red-500';
-                }
-                dot.title = 'Offline';
-            }
-        } catch(e) {
-            dot.className = 'w-3 h-3 rounded-full status-dot bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]';
-            if(text) {
-                text.innerText = 'Error';
-                text.className = 'status-text text-xs font-bold text-red-500';
-            }
-            dot.title = 'Error';
-        }
     }
 
     // Drag and Drop
@@ -622,11 +1693,14 @@
                 animation: 150,
                 handle: '.drag-handle',
                 onEnd: async function () {
-                    // Kumpulkan semua id dari semua grid untuk disimpan ordernya
-                    let orderData = [];
-                    let index = 0;
-                    document.querySelectorAll('.glass-card').forEach(card => {
-                        orderData.push({ id: parseInt(card.dataset.id), order: index++ });
+                    const cardsInGrid = Array.from(grid.querySelectorAll('.glass-card'));
+                    let orderData = cardsInGrid.map((card, idx) => ({
+                        id: parseInt(card.dataset.id),
+                        order: idx
+                    }));
+                    orderData.forEach(od => {
+                        const found = cachedLinks.find(l => l.id === od.id);
+                        if (found) found.order = od.order;
                     });
                     await apiFetch('/api/links/reorder', { method: 'PUT', body: JSON.stringify({ orderData }) });
                 }
@@ -634,23 +1708,27 @@
         });
     }
 
-    // Aksi Form
+    // Aksi Form Link
     function openAddForm() {
         document.getElementById('addLinkForm').reset();
         document.getElementById('formId').value = '';
         document.getElementById('formIcon').value = '';
+        document.getElementById('formDesc').value = '';
+        document.getElementById('formPinned').checked = false;
         document.getElementById('modalTitle').innerText = 'Tambah Link Baru';
         renderIconPicker();
         openModal('addModal');
     }
 
-    function editLink(id, name, url, category, icon) {
+    function editLink(id, name, url, category, icon, description, pinned) {
         document.getElementById('modalTitle').innerText = 'Edit Link';
         document.getElementById('formId').value = id;
         document.getElementById('formName').value = name;
         document.getElementById('formUrl').value = url;
         document.getElementById('formCategory').value = category;
         document.getElementById('formIcon').value = icon;
+        document.getElementById('formDesc').value = description || '';
+        document.getElementById('formPinned').checked = !!pinned;
         renderIconPicker();
         openModal('addModal');
     }
@@ -662,28 +1740,40 @@
             name: document.getElementById('formName').value,
             url: document.getElementById('formUrl').value,
             category: document.getElementById('formCategory').value,
-            customIcon: document.getElementById('formIcon').value
+            customIcon: document.getElementById('formIcon').value,
+            description: document.getElementById('formDesc').value,
+            pinned: document.getElementById('formPinned').checked
         };
         const endpoint = id ? `/api/links/${id}` : '/api/links';
         const method = id ? 'PUT' : 'POST';
         
-        await apiFetch(endpoint, { method, body: JSON.stringify(payload) });
+        const res = await apiFetch(endpoint, { method, body: JSON.stringify(payload) });
+        if (res) {
+            showToast(id ? 'Layanan berhasil diperbarui!' : 'Layanan baru berhasil ditambahkan!', 'success');
+        }
         closeModal('addModal');
         fetchLinks();
     }
 
     async function deleteLink(id) {
-        if(confirm("Yakin ingin menghapus?")) {
+        if(confirm("Yakin ingin menghapus layanan ini?")) {
             await apiFetch(`/api/links/${id}`, { method: 'DELETE' });
+            showToast('Layanan berhasil dihapus!', 'info');
             fetchLinks();
         }
     }
 
     // Fitur Cari & Web Search
     document.getElementById('searchInput').addEventListener('input', function(e) {
-        const term = e.target.value.toLowerCase();
-        document.querySelectorAll('.glass-card').forEach(card => {
-            card.style.display = card.innerText.toLowerCase().includes(term) ? 'flex' : 'none';
+        const term = e.target.value.toLowerCase().trim();
+        document.querySelectorAll('[data-section-category]').forEach(section => {
+            let hasVisibleCard = false;
+            section.querySelectorAll('.glass-card').forEach(card => {
+                const match = !term || card.innerText.toLowerCase().includes(term);
+                card.style.display = match ? 'flex' : 'none';
+                if (match) hasVisibleCard = true;
+            });
+            section.style.display = hasVisibleCard ? 'block' : 'none';
         });
     });
 
@@ -704,7 +1794,7 @@
     function toggleTheme() {
         document.body.classList.toggle('light-mode');
         const isLight = document.body.classList.contains('light-mode');
-        document.getElementById('theme-icon').className = isLight ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        document.getElementById('theme-icon').className = isLight ? 'fa-solid fa-sun text-amber-500' : 'fa-solid fa-moon';
         localStorage.setItem('localdash_theme', isLight ? 'light' : 'dark');
     }
 
@@ -724,37 +1814,146 @@
             
             const cpuVal = parseFloat(data.cpu) || 0;
             const ramVal = parseFloat(data.ram) || 0;
+            const diskVal = parseFloat(data.disk) || 0;
 
+            // CPU Bar
             const cpuText = document.getElementById('sys-cpu');
             const cpuBar = document.getElementById('sys-cpu-bar');
-            cpuText.innerText = `${data.cpu}%`;
-            cpuBar.style.width = `${Math.min(100, Math.max(0, cpuVal))}%`;
-            if (cpuVal > 85) {
-                cpuBar.style.backgroundColor = '#ef4444';
-                cpuText.className = 'font-bold text-red-400';
-            } else if (cpuVal > 60) {
-                cpuBar.style.backgroundColor = '#f59e0b';
-                cpuText.className = 'font-medium text-amber-400';
-            } else {
-                cpuBar.style.backgroundColor = '#0ea5e9';
-                cpuText.className = '';
+            if (cpuText) cpuText.innerText = `${data.cpu}%`;
+            if (cpuBar) {
+                cpuBar.style.width = `${Math.min(100, Math.max(0, cpuVal))}%`;
+                if (cpuVal > 85) {
+                    cpuBar.style.backgroundColor = '#ef4444';
+                    cpuText.className = 'font-bold text-red-400';
+                } else if (cpuVal > 60) {
+                    cpuBar.style.backgroundColor = '#f59e0b';
+                    cpuText.className = 'font-medium text-amber-400';
+                } else {
+                    cpuBar.style.backgroundColor = '#0ea5e9';
+                    cpuText.className = '';
+                }
             }
 
+            // RAM Bar
             const ramText = document.getElementById('sys-ram');
             const ramBar = document.getElementById('sys-ram-bar');
-            ramText.innerText = `${data.ram}%`;
-            ramBar.style.width = `${Math.min(100, Math.max(0, ramVal))}%`;
-            if (ramVal > 90) {
-                ramBar.style.backgroundColor = '#ef4444';
-                ramText.className = 'font-bold text-red-400';
-            } else if (ramVal > 75) {
-                ramBar.style.backgroundColor = '#f59e0b';
-                ramText.className = 'font-medium text-amber-400';
-            } else {
-                ramBar.style.backgroundColor = '#22c55e';
-                ramText.className = '';
+            if (ramText) ramText.innerText = `${data.ram}%`;
+            if (ramBar) {
+                ramBar.style.width = `${Math.min(100, Math.max(0, ramVal))}%`;
+                if (ramVal > 90) {
+                    ramBar.style.backgroundColor = '#ef4444';
+                    ramText.className = 'font-bold text-red-400';
+                } else if (ramVal > 75) {
+                    ramBar.style.backgroundColor = '#f59e0b';
+                    ramText.className = 'font-medium text-amber-400';
+                } else {
+                    ramBar.style.backgroundColor = '#22c55e';
+                    ramText.className = '';
+                }
+            }
+
+            // DISK Bar
+            const diskText = document.getElementById('sys-disk');
+            const diskBar = document.getElementById('sys-disk-bar');
+            const diskContainer = document.getElementById('sys-disk-container');
+            if (diskText) diskText.innerText = `${data.disk}%`;
+            if (diskContainer && data.diskInfo) {
+                diskContainer.title = `Kapasitas Disk Host: Terpakai ${data.diskInfo.usedGB} GB / Total ${data.diskInfo.totalGB} GB (Sisa: ${data.diskInfo.freeGB} GB)`;
+            }
+            if (diskBar) {
+                diskBar.style.width = `${Math.min(100, Math.max(0, diskVal))}%`;
+                if (diskVal > 85) {
+                    diskBar.style.backgroundColor = '#ef4444';
+                    if (diskText) diskText.className = 'font-bold text-red-400';
+                } else if (diskVal > 75) {
+                    diskBar.style.backgroundColor = '#f59e0b';
+                    if (diskText) diskText.className = 'font-medium text-amber-400';
+                } else {
+                    diskBar.style.backgroundColor = '#6366f1';
+                    if (diskText) diskText.className = '';
+                }
             }
         } catch(e) {}
+    }
+
+    // --- FITUR NETWORK SCRATCHPAD ---
+    async function openNetworkNotes() {
+        try {
+            const res = await fetch('/api/network-notes');
+            const data = await res.json();
+            const textarea = document.getElementById('networkNotesText');
+            if (textarea) textarea.value = data.notes || '';
+        } catch(e) {}
+        openModal('notesModal');
+    }
+
+    async function saveNetworkNotes() {
+        if (!token) return alert('Silakan login Administrator terlebih dahulu!');
+        const textarea = document.getElementById('networkNotesText');
+        const notes = textarea ? textarea.value : '';
+        const res = await apiFetch('/api/network-notes', {
+            method: 'POST',
+            body: JSON.stringify({ notes })
+        });
+        if (res && res.success) {
+            showToast('Catatan jaringan berhasil disimpan!', 'success');
+            closeModal('notesModal');
+        }
+    }
+
+    function copyNetworkNotes() {
+        const textarea = document.getElementById('networkNotesText');
+        if (!textarea || !textarea.value.trim()) return showToast('Belum ada catatan untuk disalin', 'warning');
+        copyToClipboard(textarea.value, null);
+        showToast('Catatan jaringan berhasil disalin ke clipboard! 📋', 'success');
+    }
+
+    // --- FITUR EKSPOR BOOKMARK BROWSER (HTML) ---
+    function exportBookmarksHtml() {
+        if (!cachedLinks || cachedLinks.length === 0) {
+            return showToast('Tidak ada tautan untuk diekspor', 'warning');
+        }
+        
+        const catGroups = {};
+        cachedLinks.forEach(l => {
+            const cat = l.category || 'Umum';
+            if (!catGroups[cat]) catGroups[cat] = [];
+            catGroups[cat].push(l);
+        });
+
+        const now = Math.floor(Date.now() / 1000);
+        let html = `<!DOCTYPE NETSCAPE-Bookmark-file-1>\n`;
+        html += `<!-- This is an automatically generated file. It will be read and overwritten. DO NOT EDIT! -->\n`;
+        html += `<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">\n`;
+        html += `<TITLE>Bookmarks - Khanza.NET LocalDash</TITLE>\n`;
+        html += `<H1>Bookmarks</H1>\n`;
+        html += `<DL><p>\n`;
+        html += `    <DT><H3 ADD_DATE="${now}" LAST_MODIFIED="${now}">Khanza.NET LocalDash</H3>\n`;
+        html += `    <DL><p>\n`;
+
+        for (const [cat, items] of Object.entries(catGroups)) {
+            html += `        <DT><H3 ADD_DATE="${now}" LAST_MODIFIED="${now}">${cat}</H3>\n`;
+            html += `        <DL><p>\n`;
+            items.forEach(item => {
+                html += `            <DT><A HREF="${item.url}" ADD_DATE="${now}">${item.name}</A>\n`;
+            });
+            html += `        </DL><p>\n`;
+        }
+
+        html += `    </DL><p>\n`;
+        html += `</DL><p>\n`;
+
+        const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `khanza-localdash-bookmarks-${new Date().toISOString().slice(0, 10)}.html`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+
+        showToast('Bookmark HTML berhasil diunduh! Siap diimpor ke browser 🔖', 'success');
     }
 
     function updateGreeting() {
@@ -840,6 +2039,28 @@
         openModal('quickViewModal');
     }
 
+    // Shortcut Keyboard Global: '/' untuk Search, 'Esc' untuk Tutup Modal
+    document.addEventListener('keydown', function(e) {
+        // Esc: tutup semua modal dan batalkan fokus search
+        if (e.key === 'Escape') {
+            ['quickViewModal', 'loginModal', 'addModal', 'settingsModal', 'notesModal'].forEach(id => closeModal(id));
+            const searchInput = document.getElementById('searchInput');
+            if (document.activeElement === searchInput) {
+                searchInput.blur();
+            }
+        }
+        // '/' : fokus ke search bar jika tidak sedang mengetik di form
+        if (e.key === '/' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) {
+            e.preventDefault();
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.focus();
+                searchInput.select();
+                showToast('Shortcut: Mode pencarian aktif 🔍', 'info');
+            }
+        }
+    });
+
     // Inisialisasi Service Worker untuk PWA
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
@@ -868,5 +2089,9 @@
         "retina_detect": true
     });
 </script>
+
+<!-- Toast Container -->
+<div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none max-w-sm w-full px-4 sm:px-0"></div>
+
 </body>
 </html>
